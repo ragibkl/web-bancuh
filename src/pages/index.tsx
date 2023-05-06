@@ -1,27 +1,5 @@
-import Image from "next/image";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
-
-function HomeLink(props: { children: string }): JSX.Element {
-  return (
-    <div className="px-5">
-      <a href="_blank">
-        <p className="text-2xl text-white">{props.children}</p>
-      </a>
-    </div>
-  );
-}
-
-function HeaderLink(props: { children: string }): JSX.Element {
-  return (
-    <div className="px-5">
-      <a href="_blank">
-        <p className="text-lg text-white">{props.children}</p>
-      </a>
-    </div>
-  );
-}
+import MapChart from "@/components/MapChart";
+import Header from "@/components/Header";
 
 function Hero(props: {}): JSX.Element {
   return (
@@ -54,22 +32,13 @@ function Card(props: { title: string; children: string }): JSX.Element {
 export default function Home() {
   return (
     <main>
-      <div className="bg-gray-700">
-        <div className="container mx-auto max-w-screen-lg">
-          <div className="flex py-10 items-center">
-            <HomeLink>BANCUH</HomeLink>
-            <HeaderLink>Get Started</HeaderLink>
-            <HeaderLink>FAQ</HeaderLink>
-            <div className="flex-1" />
-          </div>
-
-          <Hero />
-        </div>
-      </div>
+      <Header>
+        <Hero />
+      </Header>
 
       <div className="bg-white">
         <div className="container mx-auto max-w-screen-lg">
-          <div className="grid grid-cols-2 md:grid-cols-3 py-10">
+          <div className="grid grid-cols-2 md:grid-cols-3 py-5">
             <Card title="Family-Safe and Ad-free browsing">
               Blocks intrusive ads, tracking services, and malware sites. Blocks
               sites with adult contents. Keep your family browsing experience
@@ -105,6 +74,15 @@ export default function Home() {
               the project based on community feedback, and all work is done in
               the open.
             </Card>
+          </div>
+
+          <div className="py-5">
+            <div className="py-5">
+              <p className="text-2xl">Server locations:</p>
+            </div>
+            <div className="py-2">
+              <MapChart />
+            </div>
           </div>
         </div>
       </div>
