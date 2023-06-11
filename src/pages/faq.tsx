@@ -123,35 +123,40 @@ export default function FAQPage() {
               should use hosts file instead. Again, you can still use our
               adblock DNS servers to cover for other use cases. Here&apos;s why.
               <br />
+              <br />
               Host files work offline, your device will immediately know which
               ad domains to block, without relying on external providers. You
               can then stick to Google&apos;s DNS or OpenDNS servers for regular
               content, which should be more reliable and faster than my own
               servers.
               <br />
+              <br />
               There are also tools that can help you configure this. AdAway
               works on rooted Android devices. Some projects
               (https://github.com/StevenBlack/hosts) provide hosts files that
               you can use straight away.
+              <br />
               <br />
               But again, it does not work for all devices. I am not sure if it
               is possible on IOS, and doing this on Android requires the device
               to be rooted. And you have to configure each single device on your
               network.
               <br />
+              <br />
               It is also possible that you are also using your hosts file for
               other purposes, and you don&apos;t want to pollute it with
               thousands of lines of ad domains. Also, a misconfigured host file
               will disrupt your Internet.
               <br />
+              <br />
               Use adblock DNS when you don&apos;t want to deal with hosts file.
               It&apos;s easier.
-              <br />
             </FAQ>
 
             <FAQ title="Is it possible to host adblock DNS servers myself?">
               Certainly. There are several guides on the Internet on how to set
               this up. This has been done before numerous times.
+              <br />
               <br />I recommend you get started with my project on github at
               https://github.com/ragibkl/adblock-dns-server. Using a few
               commands, you can get up and running within minutes.
@@ -160,6 +165,7 @@ export default function FAQPage() {
             <FAQ title="It does not seem to work. How do I fix this?">
               At the moment, we don&apos;t have a dedicated troubleshooting page
               or help page yet. Will add this soon.
+              <br />
               <br />
               For now, head over to the project issues page on GitHub at
               https://github.com/ragibkl/adblock-dns-server/issues
