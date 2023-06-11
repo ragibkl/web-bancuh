@@ -26,7 +26,7 @@ export default function FAQPage() {
         <Header />
 
         <div className="bg-white">
-          <div className="container mx-auto max-w-screen-lg py-10">
+          <div className="container mx-auto max-w-screen-lg p-10">
             <p className="text-4xl">FAQ</p>
 
             <FAQ title="How much does this cost?">
