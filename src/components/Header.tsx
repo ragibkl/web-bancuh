@@ -36,9 +36,11 @@ function HeaderLink(props: { href: string; children: string }): JSX.Element {
 
 function GitHubLink() {
   return (
-    <Link href="https://github.com/ragibkl/adblock-dns-server">
-      <FaGithub size="30px" color="white" />
-    </Link>
+    <div className="px-5">
+      <Link href="https://github.com/ragibkl/adblock-dns-server">
+        <FaGithub size="30px" color="white" />
+      </Link>
+    </div>
   );
 }
 
