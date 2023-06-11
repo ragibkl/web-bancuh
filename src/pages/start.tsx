@@ -48,7 +48,9 @@ export default function FAQPage() {
               >
                 <option value="">Select Location</option>
                 {locations.map((l) => (
-                  <option value={l.name}>{l.name}</option>
+                  <option value={l.name} key={l.name}>
+                    {l.name}
+                  </option>
                 ))}
               </select>
             </div>
@@ -194,6 +196,65 @@ export default function FAQPage() {
                         src={homeRouterWanIP6Image}
                         width={800}
                       />
+                    </li>
+                  </ol>
+                </p>
+              </div>
+            )}
+
+            {device === "android" && (
+              <div className="py-3">
+                <p className="text-xl font-semibold py-2">
+                  Introduction to Private DNS
+                </p>
+
+                <p className="text-lg text-indent-2 py-2">
+                  Android versions 9 and above has a nifty feature called
+                  Private DNS.
+                </p>
+
+                <p className="text-lg text-indent-2 py-2">
+                  By default, when your Android device connects to the Internet
+                  via WiFi, it will use the default DNS servers assigned via the
+                  WiFi DHCP service. When on mobile data, it will be set by your
+                  ISP.
+                </p>
+
+                <p className="text-lg text-indent-2 py-2">
+                  With Private DNS, your Android device can connect to a
+                  different DNS server that you specify, ignoring the network
+                  DNS config. However, instead of using the normal DNS protocol
+                  via udp/tcp over port 53, Private DNS uses a different
+                  DNS-over-TLS (DoT) protocol instead. This means that the DNS
+                  queries are encrypted.
+                </p>
+
+                <p className="text-xl font-semibold py-2">
+                  Setup Bancuh DNS via Android Private DNS (DNS-over-TLS)
+                </p>
+
+                <p className="text-lg text-indent-2 py-2">
+                  Since our Bancuh DNS already supports DoT protocol, setting
+                  this up on Android is easy.
+                </p>
+
+                <p className="text-lg text-indent-2 py-2">
+                  <ol className="list-decimal list-outside ml-5">
+                    <li>On your Android device, open the Settings app.</li>
+                    <li>Navigate to Connection and Sharing - Private DNS.</li>
+                    <li>
+                      Set the Private DNS value to a custom value. Feel free to
+                      use any of the following values:
+                      <ul>
+                        {locationServers.map((s) => (
+                          <li key={s.fullName}>
+                            <b>{s.shortName}</b>
+                            <ul className="list-disc list-outside ml-5">
+                              <li>DoT: {s.fullName}</li>
+                            </ul>
+                          </li>
+                        ))}
+                      </ul>
                     </li>
                   </ol>
                 </p>
