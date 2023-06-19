@@ -46,8 +46,8 @@ export default function Home() {
             </Card>
             <Card title="Zero Cost & Completely FREE">
               This service will remain free for as long as possible. We run and
-              maintain the servers out-of-pocket, so you don't have to shell out
-              a single penny!
+              maintain the servers out-of-pocket, so you don&apost have to shell
+              out a single penny!
             </Card>
             <Card title="Minimal Setup">
               Zero installation. Point your network to our DNS servers, and you
