@@ -46,7 +46,7 @@ export default function FAQPage() {
                 onChange={(e) => setLocation(e.currentTarget.value)}
                 value={location}
               >
-                <option value="">Select Location</option>
+                {!location && <option value="">Select Location</option>}
                 {locations.map((l) => (
                   <option value={l.name} key={l.name}>
                     {l.name}
@@ -64,7 +64,7 @@ export default function FAQPage() {
                   onChange={(e) => setDevice(e.currentTarget.value)}
                   value={device}
                 >
-                  <option value="">Select Device</option>
+                  {!device && <option value="">Select Device</option>}
                   <option value="wifi">WiFi Router</option>
                   <option value="android">Android</option>
                   <option value="win10">Windows 10</option>
@@ -258,6 +258,16 @@ export default function FAQPage() {
                     </li>
                   </ol>
                 </p>
+              </div>
+            )}
+
+            {device === "win10" && (
+              <div className="py-3">
+                <p className="text-xl font-semibold py-2">
+                  Windows 10 DNS Settings
+                </p>
+
+                <p className="text-lg text-indent-2 py-2">Coming soon.</p>
               </div>
             )}
           </div>
