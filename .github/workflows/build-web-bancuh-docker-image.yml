@@ -1,4 +1,4 @@
-name: web-frontend Docker Image CI
+name: web-bancuh Docker Image CI
 
 on:
   push:
