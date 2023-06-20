@@ -8,7 +8,7 @@ function Hero(props: {}): JSX.Element {
         <p className="text-5xl text-white">Adblock DNS</p>
       </div>
       <div className="mt-10">
-        <p className="text-2xl text-white">
+        <p className="text-2xl text-white mx-10">
           Block ads on your entire wifi, laptop, PC, tablets and phones.
         </p>
       </div>
@@ -38,7 +38,7 @@ export default function Home() {
 
       <div className="bg-white">
         <div className="container mx-auto max-w-screen-lg">
-          <div className="grid grid-cols-2 md:grid-cols-3 py-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 py-5">
             <Card title="Family-Safe and Ad-free browsing">
               Blocks intrusive ads, tracking services, and malware sites. Blocks
               sites with adult contents. Keep your family browsing experience
