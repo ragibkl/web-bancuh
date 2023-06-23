@@ -86,12 +86,12 @@ export default function Header(props: React.PropsWithChildren) {
   return (
     <div className="bg-gray-700">
       <div className="container mx-auto max-w-screen-lg">
-        <div className="flex md:invisible">
+        <div className="flex md:hidden">
           <HomeLink href="/">Bancuh DNS</HomeLink>
           <div className="flex-1" />
           <Dropdown />
         </div>
-        <div className="flex py-10 items-center max-md:hidden">
+        <div className="flex py-5 items-center max-md:hidden">
           {/* Page links */}
           <HomeLink href="/">Bancuh DNS</HomeLink>
           <HeaderLink href="/start">Get Started</HeaderLink>
