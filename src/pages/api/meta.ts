@@ -9,6 +9,6 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const version = fs.readFileSync("version").toString();
+  const version = fs.readFileSync("version").toString().trim();
   res.status(200).json({ version });
 }
