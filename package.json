@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "favicon-gen": "real-favicon generate faviconDescription.json faviconData.json public",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -29,6 +30,7 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
+    "cli-real-favicon": "^0.0.8",
     "eslint-config-prettier": "^8.8.0",
     "prettier": "2.8.8"
   }
