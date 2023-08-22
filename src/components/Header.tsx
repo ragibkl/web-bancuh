@@ -96,7 +96,6 @@ export default function Header(props: React.PropsWithChildren) {
           <HomeLink href="/">Bancuh DNS</HomeLink>
           <HeaderLink href="/start">Get Started</HeaderLink>
           <HeaderLink href="/faq">FAQ</HeaderLink>
-          <HeaderLink href="/logs">Logs</HeaderLink>
           <div className="flex-1" />
 
           {/* External links */}
