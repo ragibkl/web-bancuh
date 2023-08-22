@@ -46,6 +46,8 @@ export default function FAQPage() {
                       <li>DoH: https://{s.fullName}/dns-query</li>
                       <li>Do53-ipv4: {s.ipv4}</li>
                       <li>Do53-ipv6: {s.ipv6}</li>
+                      <li>Logs-ipv4: <a className="text-blue-600" href={`http://${s.ipv4}:8080`} target="_blank">{`http://${s.ipv4}:8080`}</a></li>
+                      <li>Logs-ipv6: <a className="text-blue-600" href={`http://[${s.ipv6}]:8080`} target="_blank">{`http://[${s.ipv6}]:8080`}</a></li>
                     </ul>
                   </li>
                 ))}
