@@ -37,14 +37,14 @@ export const servers: Server[] = [
     location: "France",
     fullName: "fr-dns1.bancuh.com",
     ipv4: "51.158.99.7",
-    ipv6: "2001:bc8:600:705::1",
+    ipv6: "2001:bc8:650:f10::1",
   },
   {
     shortName: "fr-dns2",
     location: "France",
     fullName: "fr-dns2.bancuh.com",
     ipv4: "163.172.180.231",
-    ipv6: "2001:bc8:608:2054::1",
+    ipv6: "2001:bc8:608:d15::1",
   },
   {
     shortName: "jp-dns1",
