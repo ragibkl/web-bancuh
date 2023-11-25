@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "favicon-gen": "real-favicon generate faviconDescription.json faviconData.json public",
-    "dev": "next dev",
+    "dev": "next dev -H 127.0.0.1",
     "build": "next build",
+    "postbuild": "next-sitemap",
     "start": "next start",
     "fmt": "prettier --write .",
     "lint": "next lint"
@@ -21,6 +22,7 @@
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
     "next": "13.3.0",
+    "next-sitemap": "^4.2.3",
     "postcss": "8.4.23",
     "react": "18.2.0",
     "react-dom": "18.2.0",
