@@ -37,14 +37,14 @@ export const servers: Server[] = [
     location: "France",
     fullName: "fr-dns1.bancuh.com",
     ipv4: "51.158.99.7",
-    ipv6: "2001:bc8:650:f10::1",
+    ipv6: "2001:bc8:710:1efa:dc00:ff:fe34:a339",
   },
   {
     shortName: "fr-dns2",
     location: "France",
     fullName: "fr-dns2.bancuh.com",
     ipv4: "163.172.180.231",
-    ipv6: "2001:bc8:608:d15::1",
+    ipv6: "2001:bc8:710:1efb:dc00:ff:fe34:a1d7",
   },
   {
     shortName: "jp-dns1",
@@ -52,5 +52,12 @@ export const servers: Server[] = [
     fullName: "jp-dns1.bancuh.com",
     ipv4: "103.29.68.118",
     ipv6: "2400:8902::f03c:92ff:fe3e:46cd",
+  },
+  {
+    shortName: "jp-dns2",
+    location: "Tokyo",
+    fullName: "jp-dns2.bancuh.com",
+    ipv4: "172.105.195.19",
+    ipv6: "2400:8902::f03c:94ff:fee9:70",
   },
 ];
