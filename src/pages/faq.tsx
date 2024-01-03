@@ -50,17 +50,25 @@ export default function FAQPage() {
                         Logs-ipv4:{" "}
                         <a
                           className="text-blue-600"
-                          href={`http://${s.ipv4}:8080`}
+                          href={`http://${s.ipv4}:8080/logs`}
                           target="_blank"
-                        >{`http://${s.ipv4}:8080`}</a>
+                        >{`http://${s.ipv4}:8080/logs`}</a>
                       </li>
                       <li>
                         Logs-ipv6:{" "}
                         <a
                           className="text-blue-600"
-                          href={`http://[${s.ipv6}]:8080`}
+                          href={`http://[${s.ipv6}]:8080/logs`}
                           target="_blank"
-                        >{`http://[${s.ipv6}]:8080`}</a>
+                        >{`http://[${s.ipv6}]:8080/logs`}</a>
+                      </li>
+                      <li>
+                        Logs-ssl:{" "}
+                        <a
+                          className="text-blue-600"
+                          href={`http://${s.fullName}:8443/logs`}
+                          target="_blank"
+                        >{`https://${s.fullName}:8443/logs`}</a>
                       </li>
                     </ul>
                   </li>
