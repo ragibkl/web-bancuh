@@ -15,7 +15,7 @@ export const locations: Location[] = [
   { name: "Tokyo", coordinates: [139.6503, 35.6762] },
   { name: "Singapore", coordinates: [103.8198, 1.3521] },
   { name: "France", coordinates: [2.2137, 46.2276] },
-  { name: "United States", coordinates: [96.797, 32.7767] },
+  { name: "United States", coordinates: [-96.797, 32.7767] },
 ];
 
 export const servers: Server[] = [
