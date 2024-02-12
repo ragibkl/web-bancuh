@@ -15,7 +15,7 @@ export const locations: Location[] = [
   { name: "Tokyo", coordinates: [139.6503, 35.6762] },
   { name: "Singapore", coordinates: [103.8198, 1.3521] },
   { name: "France", coordinates: [2.2137, 46.2276] },
-  { name: "United States", coordinates: [-96.797, 32.7767] },
+  { name: "Dallas", coordinates: [-96.797, 32.7767] },
 ];
 
 export const servers: Server[] = [
@@ -63,7 +63,7 @@ export const servers: Server[] = [
   },
   {
     shortName: "us-dns1",
-    location: "United States",
+    location: "Dallas",
     fullName: "us-dns1.bancuh.com",
     ipv4: "45.33.24.129",
     ipv6: "2600:3c00::f03c:94ff:fe97:f94f",
