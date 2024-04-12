@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 import { FaGithub, FaBars } from "react-icons/fa";
+import { SiUptimekuma } from "react-icons/si";
 import classNames from "classnames";
 
 import { Menu, Transition } from "@headlessui/react";
@@ -72,6 +73,16 @@ function HeaderLink(props: { href: string; children: string }): JSX.Element {
   );
 }
 
+function StatusLink() {
+  return (
+    <div className="px-5 py-1">
+      <Link href="https://status.bancuh.com">
+        <SiUptimekuma size="30px" color="white" />
+      </Link>
+    </div>
+  );
+}
+
 function GitHubLink() {
   return (
     <div className="px-5 py-1">
@@ -99,6 +110,7 @@ export default function Header(props: React.PropsWithChildren) {
           <div className="flex-1" />
 
           {/* External links */}
+          <StatusLink />
           <GitHubLink />
         </div>
 
