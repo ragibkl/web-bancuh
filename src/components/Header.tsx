@@ -36,6 +36,8 @@ function Dropdown() {
             <Menu.Item>
               {({ active }) => <HeaderLink href="/faq">FAQ</HeaderLink>}
             </Menu.Item>
+            <div className="mt-2" />
+            <Menu.Item>{({ active }) => <StatusLink />}</Menu.Item>
             <Menu.Item>{({ active }) => <GitHubLink />}</Menu.Item>
           </div>
         </Menu.Items>
