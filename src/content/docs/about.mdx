@@ -1,0 +1,80 @@
+---
+title: About Bancuh DNS
+description: Who runs Bancuh DNS, how it's paid for, where the name comes from, and how it got here.
+---
+
+import { LinkCard, CardGrid } from "@astrojs/starlight/components";
+
+Bancuh DNS is a free, public adblock DNS service. It's a personal project run by
+[Ragib](https://github.com/ragibkl), a software engineer in Malaysia, with a lot
+of help from the people who use it.
+
+## How it's paid for
+
+The servers are paid for out of pocket. There are no ads, no paid tier, and
+no selling or sharing of data. Your lookups are
+[kept for 10 minutes, visible only to you](/logs/), and then deleted.
+
+Because it's run by one person, there's no uptime guarantee. Every server is
+health-checked around the clock, and outages raise an alert. Check the
+[status page](https://status.bancuh.com) if something seems wrong.
+
+## The name
+
+*Bancuh* is Malay for *to mix*, as in stirring up a drink. It began as a spare
+domain name, until users started calling the service "Bancuh DNS" and the name
+stuck. It fits: the blocklist is a mix of dozens of others.
+
+## How it got here
+
+| Year | |
+| --- | --- |
+| 2017 | Started as an ad-blocking DNS server for personal use, published on GitHub. |
+| 2018 | Other people start using it, and the first thank-you arrives as a GitHub issue. |
+| 2020 | Servers added in Paris and Tokyo. SafeSearch enforcement added at users' request. |
+| 2022 | DNS-over-HTTPS and DNS-over-TLS on every server. |
+| 2023 | The DNS server rewritten from scratch in Rust, with a new front end built on dnsdist. |
+| 2024 | Lookups resolved by each server itself instead of being forwarded to Google or Cloudflare. A server added in Dallas. |
+| 2026 | The resolver moves to Unbound, and this website is rebuilt. |
+
+## The people behind it
+
+Much of the blocklist was chosen and tuned by users, above all
+[Tomatoide](https://github.com/Tomatoide). Many others have reported broken
+sites, suggested lists, and tested new servers and features in
+[GitHub issues](https://github.com/ragibkl/adblock-dns-server/issues?q=is%3Aissue).
+Thank you.
+
+## Open source
+
+Everything that runs Bancuh DNS is open source, with the DNS software under
+the MIT licence, and you
+can [run your own copy](/self-hosting/).
+
+<CardGrid>
+  <LinkCard
+    title="adblock-dns-server"
+    description="Deployment setup and the blocklist configuration."
+    href="https://github.com/ragibkl/adblock-dns-server"
+  />
+  <LinkCard
+    title="bancuh-dns"
+    description="The filtering DNS server, written in Rust."
+    href="https://github.com/ragibkl/bancuh-dns"
+  />
+  <LinkCard
+    title="dnsdist-acme"
+    description="The DoT/DoH front end with automatic certificates."
+    href="https://github.com/ragibkl/dnsdist-acme"
+  />
+  <LinkCard
+    title="web-bancuh"
+    description="This website."
+    href="https://github.com/ragibkl/web-bancuh"
+  />
+</CardGrid>
+
+## Get in touch
+
+Questions, broken sites and suggestions all go to
+[GitHub issues](https://github.com/ragibkl/adblock-dns-server/issues).

@@ -71,6 +71,7 @@ export default defineConfig({
         {
           label: "About the service",
           items: [
+            { label: "About Bancuh DNS", slug: "about" },
             { label: "What gets blocked", slug: "filtering" },
             { label: "Query logs & privacy", slug: "logs" },
             { label: "Troubleshooting", slug: "troubleshooting" },
