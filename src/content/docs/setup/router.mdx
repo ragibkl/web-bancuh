@@ -1,0 +1,90 @@
+---
+title: Wi-Fi router
+description: Set Bancuh DNS on your home router so every device on your network is covered.
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import { Image } from "astro:assets";
+import ServerPicker from "../../../components/ServerPicker.astro";
+
+import homeRouter from "../../../assets/setup/home_router.drawio.png";
+import routerLogin from "../../../assets/setup/home_router_login.png";
+import routerWanIp from "../../../assets/setup/home_router_wan_ip.png";
+import routerWanIp6 from "../../../assets/setup/home_router_wan_ip6.png";
+
+Setting Bancuh DNS on your router is the simplest way to cover everything at
+home: phones, laptops, smart TVs, consoles and guests' devices. You change one
+setting and nothing needs to be done on each device.
+
+## How home DNS works
+
+<Image src={homeRouter} alt="Diagram of a home network. Laptops and phones get the router's address as their DNS server over DHCP. The router forwards lookups to its WAN DNS servers, which are changed from Google or the ISP to Bancuh DNS." />
+
+Your router gets an internet connection from your provider, along with a set of
+DNS servers to use. This is the **WAN DNS**, usually your provider's own
+servers or Google's.
+
+Each device that joins your Wi-Fi is given an address by the router, and told
+to use the router itself for DNS. When a device looks up a name:
+
+1. The device asks the router.
+2. The router answers from its cache if it can.
+3. Otherwise the router asks its WAN DNS servers, caches the answer and passes
+   it back.
+
+So changing the router's **WAN DNS** to Bancuh DNS makes every device on the
+network use it, without touching the devices.
+
+## Set it up
+
+You'll need these addresses:
+
+<ServerPicker show="dns" />
+
+<Steps>
+
+1. Open your router's admin page in a browser. It is usually at
+   `http://192.168.0.1` or `http://192.168.1.1`, and the address and password
+   are often printed on a sticker on the router.
+
+   <Image src={routerLogin} alt="A router admin login page asking for a username and password." width={400} />
+
+2. Find the **WAN** or **Internet** settings, and look for the DNS options.
+   You may need to switch DNS from *automatic* to *manual*.
+
+   <Image src={routerWanIp} alt="A router's WAN settings page with fields for primary and secondary DNS servers." width={800} />
+
+3. Enter the two **IPv4** addresses for your location as the primary and
+   secondary DNS servers, and save.
+
+4. If your connection has IPv6, find the **IPv6 WAN** settings, which are often
+   on a separate page, and enter the two **IPv6** addresses there.
+
+   <Image src={routerWanIp6} alt="A router's IPv6 WAN settings page with fields for IPv6 DNS servers." width={800} />
+
+5. Check the **LAN** or **DHCP server** settings. The DNS server handed to
+   devices should be the router's own address, or left on automatic. If it
+   lists other DNS servers such as `8.8.8.8`, devices will skip the router and
+   bypass Bancuh DNS.
+
+6. Reconnect your devices to Wi-Fi, or restart them, so they drop any cached
+   lookups. Then [check that it works](/logs/).
+
+</Steps>
+
+<Aside type="caution" title="Don't forget IPv6">
+If your provider supports IPv6 but you only change the IPv4 DNS, devices can
+still get IPv6 DNS servers from your provider and use those instead. Ads will
+then appear some of the time. Either set the IPv6 DNS servers too, or check
+your router's IPv6 LAN settings for a DNS option.
+</Aside>
+
+## If your router doesn't let you change DNS
+
+Some routers supplied by internet providers lock the DNS settings. You have a
+few options:
+
+- Look for DNS under the **LAN / DHCP** settings instead. Handing Bancuh DNS
+  addresses straight to devices works just as well.
+- Set up each device individually using the other [setup guides](/start/).
+- Put your own router behind the provider's, and set DNS on yours.

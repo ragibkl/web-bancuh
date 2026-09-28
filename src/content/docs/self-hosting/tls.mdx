@@ -1,0 +1,66 @@
+---
+title: Enable DoT & DoH
+description: Add DNS-over-TLS and DNS-over-HTTPS to your server, with automatic Let's Encrypt certificates.
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+With TLS enabled, dnsdist-acme gets a certificate from Let's Encrypt, renews it
+automatically, and serves DNS-over-TLS on port 853 and DNS-over-HTTPS on port
+443. The query logs page is also served over HTTPS on port 8443.
+
+## Requirements
+
+- The server has a **public IP address**.
+- A **domain name**, such as `dns1.example.com`, with an `A` record (and
+  `AAAA` for IPv6) pointing at it.
+- **Port 80** reachable from the internet. Let's Encrypt validates the
+  certificate over HTTP on port 80 only.
+- **Ports 443 and 853** reachable for DoH and DoT.
+
+## Turn it on
+
+<Steps>
+
+1. Edit `EXAMPLES/default/.env`:
+
+   ```ini title=".env"
+   TLS_ENABLED=true
+   TLS_DOMAIN=dns1.example.com
+   TLS_EMAIL=you@example.com
+   ```
+
+2. Restart:
+
+   ```sh
+   ./start.sh
+   ```
+
+3. Watch the certificate being issued:
+
+   ```sh
+   docker compose logs -f dnsdist
+   ```
+
+4. Test it with `dig` (BIND 9.18 or newer):
+
+   ```sh
+   dig +tls @dns1.example.com zedo.com     # DNS-over-TLS
+   dig +https @dns1.example.com zedo.com   # DNS-over-HTTPS
+   ```
+
+   Both should answer `0.0.0.0`.
+
+   Or set it as the Private DNS hostname on an Android phone. See
+   [Android](/setup/android/).
+
+</Steps>
+
+<Aside type="caution" title="Keep the letsencrypt volume">
+The certificate and account key live in the `letsencrypt` Docker volume.
+If you delete it, the next start requests a brand new certificate, and Let's
+Encrypt allows only 5 duplicate certificates per domain per week.
+</Aside>
+
+`TLS_ENABLED` is only for dnsdist-acme. The Compose file forces it off for the
+`dns` container, which must not request its own certificate.

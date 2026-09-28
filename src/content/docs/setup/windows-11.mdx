@@ -1,0 +1,57 @@
+---
+title: Windows 11
+description: Use Bancuh DNS with Windows 11's built-in encrypted DNS (DNS-over-HTTPS).
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import ServerPicker from "../../../components/ServerPicker.astro";
+
+Windows 11 can encrypt DNS lookups with DNS-over-HTTPS out of the box. You set
+it separately for each network connection, such as Wi-Fi and Ethernet.
+
+## Set it up
+
+You'll need these values:
+
+<ServerPicker show="windows" />
+
+<Steps>
+
+1. Open **Settings › Network & internet**, and choose **Wi-Fi** or
+   **Ethernet**. For Wi-Fi, open **Hardware properties**, or the properties of
+   the network you're connected to.
+
+2. Next to **DNS server assignment**, select **Edit**, and change it from
+   *Automatic (DHCP)* to **Manual**.
+
+3. Turn on **IPv4**, then:
+   - **Preferred DNS:** the first IPv4 address from the table
+   - **DNS over HTTPS:** *On (manual template)*
+   - **DNS over HTTPS template:** the first template from the table
+   - **Fallback to plaintext:** Off
+   - Repeat for **Alternate DNS** with the second server
+
+4. Turn on **IPv6** and do the same with the IPv6 addresses and the same
+   templates.
+
+5. Select **Save**. Next to your DNS servers, the connection's properties now
+   show **(Encrypted)**.
+
+6. Repeat for your other connections if you use more than one, then
+   [check that it works](/logs/).
+
+</Steps>
+
+<Aside type="note">
+Older builds of Windows 11 don't have the template box. There, choose
+**Encrypted only (DNS over HTTPS)**, then register each address with its
+template once from an admin PowerShell, using the values from the table:
+
+```powershell
+Add-DnsClientDohServerAddress -ServerAddress <address> -DohTemplate <template> -AllowFallbackToUdp $false -AutoUpgrade $true
+```
+</Aside>
+
+## Undo it
+
+Set **DNS server assignment** back to **Automatic (DHCP)**.

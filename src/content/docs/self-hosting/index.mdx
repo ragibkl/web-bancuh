@@ -1,0 +1,87 @@
+---
+title: Self-hosting overview
+description: Run your own adblock DNS server with the same open-source software behind Bancuh DNS.
+sidebar:
+  label: Overview
+---
+
+import { Aside, CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+Everything that runs Bancuh DNS is open source, and packaged so you can run the
+same thing on your own server with Docker Compose.
+
+Reasons to run your own:
+
+- **Your own rules.** Choose your own blocklists, allow what the public filter
+  blocks, or turn off SafeSearch.
+- **Closer and faster.** Put a server on your home network or in a nearby data
+  centre.
+- **Your own privacy.** Only you hold the logs.
+- **Capacity.** Serve a school or office without shared per-IP limits.
+
+## How it fits together
+
+Each Bancuh DNS server runs two containers:
+
+```
+            +-----------------------------+      +----------------------+
+clients --> | dnsdist-acme                | ---> | bancuh-dns           | ---> internet
+            |  :53   plain DNS            |      |  :1153 plain DNS     |
+            |  :853  DNS-over-TLS         |      |  blocklist filtering |
+            |  :443  DNS-over-HTTPS       |      |  daily list updates  |
+            |  :80   Let's Encrypt        |      |  recursive resolver  |
+            |  :8080 query logs (HTTP)    |      |  (or forwarders)     |
+            |  :8443 query logs (HTTPS)   |      +----------------------+
+            |  rate limiting              |
+            +-----------------------------+
+```
+
+| Component | What it does | Repository |
+| --- | --- | --- |
+| **adblock-dns-server** | The Docker Compose setup and the blocklist configuration used by the public service. Start here. | [ragibkl/adblock-dns-server](https://github.com/ragibkl/adblock-dns-server) |
+| **bancuh-dns** | The filtering DNS server, written in Rust. Compiles the blocklist, answers or blocks lookups, and resolves everything else with a built-in recursive resolver (Unbound). | [ragibkl/bancuh-dns](https://github.com/ragibkl/bancuh-dns) |
+| **dnsdist-acme** | The front end, built on [dnsdist](https://dnsdist.org/). Handles DoT and DoH with automatic Let's Encrypt certificates, rate limiting and the query logs page. | [ragibkl/dnsdist-acme](https://github.com/ragibkl/dnsdist-acme) |
+
+Images are published for `amd64`, `arm64`, `386` and `arm/v7`, so a Raspberry
+Pi with enough memory works as well as a cloud server.
+
+## What you'll need
+
+- **A Linux machine**, such as a VPS, a home server, a virtual machine or a
+  Raspberry Pi. A current Ubuntu Server LTS is a good default.
+- **About 2 GiB of RAM.** The default blocklist has millions of entries.
+- **Docker** with the Compose plugin.
+- **Port 53** free on the machine.
+- **For DoT and DoH:** a public IP address, a domain name pointing at it, and
+  ports 80, 443 and 853 reachable from the internet.
+
+<Aside type="caution" title="Private or public?">
+The default setup answers anyone who can reach port 53, which makes it a
+**public resolver**. On a VPS, that means anyone on the internet can use it. The
+built-in rate limiting stops it being abused for amplification attacks, but if
+the server is only for you, firewall port 53 (and 853 and 443) to your own
+addresses. On a home network behind a router, it's private by default.
+</Aside>
+
+<CardGrid>
+  <LinkCard
+    title="Run with Docker Compose"
+    description="Get a server answering lookups in a few minutes."
+    href="/self-hosting/docker-compose/"
+  />
+  <LinkCard
+    title="Enable DoT & DoH"
+    description="Add encrypted DNS with automatic certificates."
+    href="/self-hosting/tls/"
+  />
+  <LinkCard
+    title="Customise the blocklist"
+    description="Add your own sources, allowlists and rewrites."
+    href="/self-hosting/blocklists/"
+  />
+  <LinkCard
+    title="Configuration reference"
+    description="Every environment variable, for both containers."
+    href="/self-hosting/configuration/"
+  />
+</CardGrid>

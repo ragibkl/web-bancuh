@@ -1,0 +1,80 @@
+---
+title: Query logs & privacy
+description: See your own recent DNS lookups on each Bancuh server, and what the servers keep.
+---
+
+import { Aside } from "@astrojs/starlight/components";
+import { getServers } from "../../lib/servers";
+
+export const servers = await getServers();
+
+Every server has a **query logs page** that lists the DNS lookups it received
+from your IP address in the last 10 minutes. Use it to confirm you're connected,
+or to find out which domain a broken app or website needs.
+
+## Open your logs
+
+Open the link for the server you set up:
+
+<table>
+  <thead>
+    <tr>
+      <th>Server</th>
+      <th>Logs</th>
+    </tr>
+  </thead>
+  <tbody>
+    {servers.map((s) => (
+      <tr>
+        <td>{s.id}</td>
+        <td>
+          <a href={s.logs.https}>HTTPS</a> · <a href={s.logs.ipv4}>IPv4 only</a> · <a href={s.logs.ipv6}>IPv6 only</a>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+The page shows your IP address as the server sees it, then each lookup's time,
+the name looked up, and the answer. An answer of `0.0.0.0` or `::` means it was
+[blocked](/filtering/).
+
+## Why is my log empty?
+
+The page only shows lookups that came from **the same IP address your browser
+is using now**. If they don't match, the page is empty even though Bancuh DNS
+is working:
+
+- **IPv4 vs IPv6.** Your router may send DNS over IPv4 while your browser
+  opens the page over IPv6, or the other way round. The **HTTPS** link lets
+  your browser choose. The **IPv4 only** and **IPv6 only** links force one, so
+  try both.
+- **VPNs and proxies.** If your browser goes through a VPN, iCloud Private
+  Relay or a proxy, the page sees that address instead of yours.
+- **Nothing recent.** Only the last 10 minutes are kept. Browse a little, then
+  reload.
+- **Wrong server.** Open the logs on the same server you set up.
+
+<Aside type="note" title="Why the IPv4 and IPv6 links aren't HTTPS">
+Certificates are issued for the server hostnames, not their IP addresses, so
+only the hostname link can use HTTPS. The address links use plain HTTP on port
+8080, and show only your own lookups, the same as the HTTPS page.
+</Aside>
+
+## Privacy
+
+- **Your lookups are visible only to you.** The logs page shows each visitor
+  only the lookups made from their own IP address.
+- **They're kept for 10 minutes.** Query logs are held in memory, not written
+  to disk, and are dropped after 10 minutes.
+- **Your lookups aren't sent to Google or Cloudflare.** Each server resolves
+  names itself, asking the websites' own DNS servers directly, with DNSSEC
+  validation.
+- **Service logs.** For troubleshooting, each server also keeps about an hour
+  of its own service logs, which can include IP addresses. These are rotated
+  out automatically.
+- **No accounts, no tracking.** Bancuh DNS doesn't ask who you are, and this
+  website has no analytics or cookies.
+
+Encrypted DNS (DoT or DoH) keeps your lookups private from your network
+provider and anyone else on the network. Plain DNS doesn't.

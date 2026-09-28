@@ -1,0 +1,41 @@
+# Public Bancuh DNS servers. Every page on the site reads from this file.
+# Pages list locations and servers sorted by id.
+#
+# The hostname is `<id>.bancuh.com`, and serves DoT, DoH and the logs page.
+# When adding or removing a server, also update the Gatus config in
+# flux-deploy and the server lists in adblock-dns-server/scripts.
+
+- id: sg-dns1
+  location: singapore
+  ipv4: 139.59.219.245
+  ipv6: 2400:6180:0:d0::f7:1001
+
+- id: sg-dns2
+  location: singapore
+  ipv4: 139.59.218.207
+  ipv6: 2400:6180:0:d0::f5:7001
+
+- id: jp-dns1
+  location: tokyo
+  ipv4: 103.29.68.118
+  ipv6: 2400:8902::f03c:92ff:fe3e:46cd
+
+- id: jp-dns2
+  location: tokyo
+  ipv4: 172.105.195.19
+  ipv6: 2400:8902::f03c:94ff:fee9:70
+
+- id: fr-dns1
+  location: france
+  ipv4: 51.158.99.7
+  ipv6: 2001:bc8:710:1efa:dc00:ff:fe34:a339
+
+- id: fr-dns2
+  location: france
+  ipv4: 163.172.180.231
+  ipv6: 2001:bc8:710:1efb:dc00:ff:fe34:a1d7
+
+- id: us-dns1
+  location: dallas
+  ipv4: 45.33.24.129
+  ipv6: 2600:3c00::f03c:94ff:fe97:f94f

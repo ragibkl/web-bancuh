@@ -1,0 +1,59 @@
+---
+// Every server with every way to reach it. Used on the Servers page.
+import { getLocationsWithServers } from "../lib/servers";
+
+const locations = await getLocationsWithServers();
+---
+
+{locations.map((l) => (
+  <>
+    <h3 id={`location-${l.id}`}>{l.name}</h3>
+    {l.servers.map((s) => (
+      <div class="server">
+        <h4 id={s.id}>{s.id}</h4>
+        <table>
+          <tbody>
+            <tr>
+              <th scope="row">IPv4</th>
+              <td>
+                <code>{s.ipv4}</code>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">IPv6</th>
+              <td>
+                <code>{s.ipv6}</code>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">DNS-over-TLS</th>
+              <td>
+                <code>{s.hostname}</code>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">DNS-over-HTTPS</th>
+              <td>
+                <code>{s.doh}</code>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Query logs</th>
+              <td>
+                <a href={s.logs.https}>HTTPS</a> ·{" "}
+                <a href={s.logs.ipv4}>IPv4 only</a> ·{" "}
+                <a href={s.logs.ipv6}>IPv6 only</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    ))}
+  </>
+))}
+
+<style>
+  td code {
+    white-space: nowrap;
+  }
+</style>

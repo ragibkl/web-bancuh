@@ -1,0 +1,79 @@
+---
+title: Quick start
+description: Choose a Bancuh DNS server and a way to set it up on your device or network.
+---
+
+import { Aside, LinkCard, CardGrid, Steps } from "@astrojs/starlight/components";
+import ServerPicker from "../../components/ServerPicker.astro";
+
+Bancuh DNS works by answering your device's DNS lookups. When something asks
+for an ad server, tracker or blocked site, the answer is a dead end and it
+never loads. Everything else resolves normally.
+
+To use it, you point your device or router at a Bancuh server instead of your
+internet provider's DNS. Nothing needs to be installed.
+
+<Steps>
+
+1. **Pick the location closest to you.**
+
+   Closer servers answer faster. Your choice here is remembered on every setup
+   page.
+
+   <ServerPicker show="dns" />
+
+2. **Pick how you want to set it up.**
+
+   Setting it on your router covers every device at home. Setting it on a
+   phone or laptop covers that device everywhere, including on mobile data and
+   other people's Wi-Fi.
+
+   | Device                 | Method                        | Covers                       | Encrypted |
+   | ---------------------- | ----------------------------- | ---------------------------- | --------- |
+   | Wi-Fi router           | WAN DNS setting               | Every device on your network | No        |
+   | Android 9+             | Private DNS (DoT)             | That phone, on any network   | Yes       |
+   | iPhone, iPad, Mac      | Configuration profile (DoH)   | That device, on any network  | Yes       |
+   | Windows 11             | Encrypted DNS setting (DoH)   | That PC                      | Yes       |
+   | Windows 10             | Network adapter setting       | That PC                      | No        |
+   | Linux                  | systemd-resolved (DoT)        | That machine                 | Yes       |
+   | Chrome, Firefox, Edge… | Secure DNS setting (DoH)      | That browser only            | Yes       |
+
+3. **Follow the guide for your device.**
+
+   <CardGrid>
+     <LinkCard title="Wi-Fi router" href="/setup/router/" />
+     <LinkCard title="Android" href="/setup/android/" />
+     <LinkCard title="iPhone, iPad & Mac" href="/setup/apple/" />
+     <LinkCard title="Windows 11" href="/setup/windows-11/" />
+     <LinkCard title="Windows 10" href="/setup/windows-10/" />
+     <LinkCard title="Linux" href="/setup/linux/" />
+     <LinkCard title="Web browsers" href="/setup/browsers/" />
+   </CardGrid>
+
+4. **Check that it works.**
+
+   Browse for a minute, then open the [query logs](/logs/) for your server. If
+   you can see your own lookups, you're connected. You can also look up a
+   known ad domain such as `zedo.com`: through Bancuh DNS it returns `0.0.0.0`.
+
+</Steps>
+
+<Aside type="tip" title="Protocols in one line each">
+
+- **Plain DNS** (port 53) works everywhere but isn't encrypted, so your
+  network provider can see and change your lookups.
+- **DNS-over-TLS (DoT)** encrypts lookups on port 853. Android's Private DNS
+  uses it.
+- **DNS-over-HTTPS (DoH)** encrypts lookups inside normal HTTPS on port 443.
+  Browsers, Windows 11 and Apple devices use it.
+
+</Aside>
+
+<Aside type="caution" title="Before you switch">
+
+Bancuh DNS is a strict family filter, not just an ad blocker. It also blocks
+things like VPN provider websites, crypto exchanges, torrent sites and other
+public DNS services. Read [what gets blocked](/filtering/) first so nothing
+catches you by surprise.
+
+</Aside>

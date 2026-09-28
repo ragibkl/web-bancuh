@@ -1,0 +1,82 @@
+---
+title: Linux
+description: Use Bancuh DNS over DNS-over-TLS with systemd-resolved on Linux.
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import ServerPicker from "../../../components/ServerPicker.astro";
+
+Most desktop Linux distributions, including Ubuntu, Fedora and Debian with
+GNOME, use `systemd-resolved` for DNS. It supports DNS-over-TLS, so your
+lookups are encrypted.
+
+Check that it's in use:
+
+```sh
+resolvectl status
+```
+
+If this prints your DNS settings, carry on. If the command isn't found, see
+[other setups](#other-setups) below.
+
+## Set it up
+
+<Steps>
+
+1. Create the configuration file below for your location. The `#hostname`
+   after each address tells systemd-resolved which name to verify the TLS
+   certificate against.
+
+   <ServerPicker show="linux" />
+
+   ```sh
+   sudo mkdir -p /etc/systemd/resolved.conf.d
+   sudo nano /etc/systemd/resolved.conf.d/bancuh.conf
+   ```
+
+2. Restart the resolver:
+
+   ```sh
+   sudo systemctl restart systemd-resolved
+   ```
+
+3. Stop NetworkManager from adding your network's own DNS servers, which would
+   otherwise be used alongside Bancuh DNS. Replace `<connection>` with the
+   name shown by `nmcli connection show`:
+
+   ```sh
+   nmcli connection modify <connection> ipv4.ignore-auto-dns yes ipv6.ignore-auto-dns yes
+   nmcli connection up <connection>
+   ```
+
+4. Confirm the setup. The global section should list the Bancuh servers with
+   `+DNSOverTLS`:
+
+   ```sh
+   resolvectl status
+   resolvectl query zedo.com   # blocked domains return 0.0.0.0
+   ```
+
+</Steps>
+
+## Undo it
+
+```sh
+sudo rm /etc/systemd/resolved.conf.d/bancuh.conf
+sudo systemctl restart systemd-resolved
+nmcli connection modify <connection> ipv4.ignore-auto-dns no ipv6.ignore-auto-dns no
+nmcli connection up <connection>
+```
+
+## Other setups
+
+If your system doesn't use systemd-resolved, set plain DNS instead: through
+your network manager's settings, or by listing the servers in
+`/etc/resolv.conf`.
+
+<ServerPicker show="dns" />
+
+<Aside type="tip">
+For encrypted DNS without systemd-resolved, a local resolver such as `unbound`
+or `stubby` can forward to the DNS-over-TLS hostnames on port 853.
+</Aside>

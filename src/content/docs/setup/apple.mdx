@@ -1,0 +1,89 @@
+---
+title: iPhone, iPad & Mac
+description: Install a configuration profile to use Bancuh DNS over DNS-over-HTTPS on iOS, iPadOS and macOS.
+---
+
+import { Aside, Steps, Tabs, TabItem } from "@astrojs/starlight/components";
+import ServerPicker from "../../../components/ServerPicker.astro";
+
+Apple devices running iOS 14, iPadOS 14, macOS 11 (Big Sur) or newer can use
+an encrypted DNS server system-wide through a **configuration profile**. The
+profile only changes DNS settings. It doesn't manage your device or install
+anything else, and you can remove it at any time.
+
+Each profile uses one Bancuh server over DNS-over-HTTPS, on Wi-Fi and mobile
+data.
+
+## Download a profile
+
+Open this page on the device you want to set up, and download one profile:
+
+<ServerPicker show="profile" />
+
+<Aside type="note" title="&quot;Unverified&quot; is expected">
+The profiles aren't signed, so iOS and macOS label them **Unverified** when you
+install them. You can [read what's inside](https://github.com/ragibkl/web-bancuh/blob/master/src/pages/profiles/%5Bid%5D.mobileconfig.ts)
+before you install one: it contains the server's DoH URL and IP addresses and
+nothing else.
+</Aside>
+
+## Install it
+
+<Tabs syncKey="apple-device">
+  <TabItem label="iPhone & iPad">
+    <Steps>
+
+    1. Download the profile in **Safari**. When asked, allow the download.
+       iOS shows *Profile Downloaded*.
+
+    2. Open **Settings**. Tap **Profile Downloaded** near the top, or go to
+       Settings › General › VPN & Device Management and tap the Bancuh DNS
+       profile.
+
+    3. Tap **Install**, enter your passcode, and confirm.
+
+    4. Go to Settings › General › VPN & Device Management › **DNS**, and make
+       sure **Bancuh DNS** is selected.
+
+    </Steps>
+  </TabItem>
+  <TabItem label="Mac">
+    <Steps>
+
+    1. Download the profile. macOS shows a notification that it needs to be
+       reviewed.
+
+    2. Open **System Settings**. The profile is under General › Device
+       Management, or Privacy & Security › Profiles on older versions of
+       macOS. You can also search System Settings for "Profiles".
+
+    3. Double-click the Bancuh DNS profile, click **Install**, and confirm with
+       your password.
+
+    </Steps>
+  </TabItem>
+</Tabs>
+
+Then [check that it works](/logs/).
+
+## Remove it
+
+Go to the same place you installed it (Settings › General › VPN & Device
+Management on iPhone and iPad, or Device Management / Profiles on Mac), select
+the Bancuh DNS profile, and choose **Remove Profile**.
+
+<Aside type="caution" title="Things that bypass the profile">
+- **iCloud Private Relay** handles DNS itself for Safari. Ads may still show
+  in Safari while it's on.
+- **VPN apps** usually send DNS through the VPN.
+- **Chrome and Firefox** may use their own secure DNS setting. See
+  [Web browsers](/setup/browsers/).
+</Aside>
+
+## Mac: plain DNS instead
+
+If you'd rather not install a profile, you can set plain, unencrypted DNS for
+each network in System Settings › Network › (your Wi-Fi or Ethernet) ›
+Details › DNS. Add these addresses and remove any others:
+
+<ServerPicker show="dns" />

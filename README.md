@@ -1,38 +1,48 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# web-bancuh
 
-## Getting Started
+The website for [Bancuh DNS](https://bancuh.com), a free public adblock DNS
+service. Built with [Astro](https://astro.build) and
+[Starlight](https://starlight.astro.build), and served as static files by nginx.
 
-First, run the development server:
+## Development
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+Uses the Node version in `.tool-versions` (mise or asdf will pick it up).
+
+```sh
+npm install
+npm run dev      # http://localhost:4321
+npm run build    # type-checks, then builds to dist/
+npm run preview  # serves dist/
+npm run fmt      # prettier
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Where things are
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+| Path                      | What                                                                                              |
+| ------------------------- | ------------------------------------------------------------------------------------------------- |
+| `src/content/docs/`       | Every page, in Markdown/MDX. The URL follows the file path.                                       |
+| `astro.config.mjs`        | Site settings and the sidebar.                                                                    |
+| `src/data/servers.yaml`   | The public DNS servers. Every page, table, map pin and Apple profile is generated from this file. |
+| `src/data/locations.yaml` | Server locations and their map coordinates.                                                       |
+| `src/components/`         | The server map, server tables and the location picker used by the setup guides.                   |
+| `src/pages/profiles/`     | Generates an Apple `.mobileconfig` profile per server.                                            |
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### Adding or removing a server
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Edit `src/data/servers.yaml` (and `locations.yaml` for a new location). The
+build fails if an entry has a missing field or a malformed IP address.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+The same server list also lives in the Gatus config in `ragibkl/flux-deploy`
+and in `adblock-dns-server/scripts/`, so update those too.
 
-## Learn More
+## Releasing
 
-To learn more about Next.js, take a look at the following resources:
+CI builds the site on every pull request and push, then publishes
+`ghcr.io/ragibkl/web-bancuh:sha-<short sha>`. Pull requests also get
+`pr-<number>`, and `master` also gets `latest`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To roll out, set the image tag in `ragibkl/flux-deploy`
+(`clusters/vmbr1-k3s/services/bancuh-web/web-bancuh.yaml`) to the new
+`sha-` tag.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+The image is `nginx-unprivileged` listening on port 8080.

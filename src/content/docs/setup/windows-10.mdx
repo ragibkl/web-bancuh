@@ -1,0 +1,65 @@
+---
+title: Windows 10
+description: Set Bancuh DNS on a Windows 10 network adapter.
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import { Image } from "astro:assets";
+import ServerPicker from "../../../components/ServerPicker.astro";
+
+import adapterList from "../../../assets/setup/windows_10_adapter_list.png";
+import adapterProperties from "../../../assets/setup/windows_10_adapter_properties.png";
+import ipv4 from "../../../assets/setup/windows_10_ipv4.png";
+import ipv6 from "../../../assets/setup/windows_10_ipv6.png";
+
+Windows 10 has no built-in encrypted DNS, so this sets plain DNS on your
+network adapter. For encrypted DNS on Windows 10, set up
+[your browser](/setup/browsers/) as well, or set DNS on
+[your router](/setup/router/) to cover the whole network.
+
+<Aside type="caution">
+Microsoft ended support for Windows 10 in October 2025. If your PC can run
+Windows 11, its [encrypted DNS](/setup/windows-11/) is the better option.
+</Aside>
+
+## Set it up
+
+You'll need these addresses:
+
+<ServerPicker show="dns" />
+
+<Steps>
+
+1. Press <kbd>Win</kbd> + <kbd>R</kbd>, type `ncpa.cpl` and press
+   <kbd>Enter</kbd>. This opens **Network Connections**.
+
+   <Image src={adapterList} alt="The Network Connections window listing Ethernet and Wi-Fi adapters." />
+
+2. Right-click the adapter you use (**Wi-Fi** or **Ethernet**) and choose
+   **Properties**.
+
+   <Image src={adapterProperties} alt="The adapter properties dialog with Internet Protocol Version 4 and Version 6 in the list." />
+
+3. Select **Internet Protocol Version 4 (TCP/IPv4)** and click
+   **Properties**. Choose **Use the following DNS server addresses**, and
+   enter the two IPv4 addresses as the preferred and alternate DNS servers.
+   Click **OK**.
+
+   <Image src={ipv4} alt="The IPv4 properties dialog with 'Use the following DNS server addresses' selected and empty preferred and alternate DNS fields." />
+
+4. Select **Internet Protocol Version 6 (TCP/IPv6)** and do the same with the
+   two IPv6 addresses.
+
+   <Image src={ipv6} alt="The IPv6 properties dialog with preferred and alternate DNS server fields." />
+
+5. Click **OK** to close the adapter properties. Then open Command Prompt and
+   run `ipconfig /flushdns` to clear old lookups.
+
+6. [Check that it works](/logs/).
+
+</Steps>
+
+## Undo it
+
+Go back to both protocol properties and choose **Obtain DNS server address
+automatically**.

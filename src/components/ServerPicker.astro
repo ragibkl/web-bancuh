@@ -1,0 +1,170 @@
+---
+// Location tabs showing the values a setup guide needs. The chosen location is
+// remembered across pages (Starlight's syncKey), so a visitor picks it once.
+import { Code, Tabs, TabItem } from "@astrojs/starlight/components";
+
+import { getLocationsWithServers, type Server } from "../lib/servers";
+
+interface Props {
+  /**
+   * - dns: plain DNS addresses (routers, Windows 10, macOS)
+   * - dot: DNS-over-TLS hostnames (Android)
+   * - doh: DNS-over-HTTPS URLs (browsers)
+   * - windows: address plus DoH template pairs (Windows 11)
+   * - linux: a systemd-resolved drop-in using DoT
+   * - profile: Apple configuration profile downloads
+   */
+  show: "dns" | "dot" | "doh" | "windows" | "linux" | "profile";
+}
+
+const { show } = Astro.props;
+const locations = await getLocationsWithServers();
+
+function linuxConfig(servers: Server[]): string {
+  const dns = servers.flatMap((s) => [
+    `${s.ipv4}#${s.hostname}`,
+    `${s.ipv6}#${s.hostname}`,
+  ]);
+  return [
+    "[Resolve]",
+    `DNS=${dns.join(" ")}`,
+    "DNSOverTLS=yes",
+    "Domains=~.",
+    "",
+  ].join("\n");
+}
+---
+
+<Tabs syncKey="bancuh-location">
+  {locations.map((l) => (
+    <TabItem label={l.name}>
+      {show === "dns" && (
+        <table>
+          <thead>
+            <tr>
+              <th>Server</th>
+              <th>IPv4</th>
+              <th>IPv6</th>
+            </tr>
+          </thead>
+          <tbody>
+            {l.servers.map((s) => (
+              <tr>
+                <td>{s.id}</td>
+                <td>
+                  <code>{s.ipv4}</code>
+                </td>
+                <td>
+                  <code>{s.ipv6}</code>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {show === "dot" && (
+        <table>
+          <thead>
+            <tr>
+              <th>Server</th>
+              <th>Private DNS hostname</th>
+            </tr>
+          </thead>
+          <tbody>
+            {l.servers.map((s) => (
+              <tr>
+                <td>{s.id}</td>
+                <td>
+                  <code>{s.hostname}</code>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {show === "doh" && (
+        <table>
+          <thead>
+            <tr>
+              <th>Server</th>
+              <th>DNS-over-HTTPS URL</th>
+            </tr>
+          </thead>
+          <tbody>
+            {l.servers.map((s) => (
+              <tr>
+                <td>{s.id}</td>
+                <td>
+                  <code>{s.doh}</code>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {show === "windows" && (
+        <table>
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>IPv4</th>
+              <th>IPv6</th>
+            </tr>
+          </thead>
+          <tbody>
+            {l.servers.slice(0, 2).map((s, i) => (
+              <>
+                <tr>
+                  <td>{i === 0 ? "Preferred DNS" : "Alternate DNS"}</td>
+                  <td>
+                    <code>{s.ipv4}</code>
+                  </td>
+                  <td>
+                    <code>{s.ipv6}</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td>DNS over HTTPS template</td>
+                  <td colspan="2">
+                    <code>{s.doh}</code>
+                  </td>
+                </tr>
+              </>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {show === "linux" && (
+        <Code
+          code={linuxConfig(l.servers)}
+          lang="ini"
+          title="/etc/systemd/resolved.conf.d/bancuh.conf"
+        />
+      )}
+
+      {show === "profile" && (
+        <ul>
+          {l.servers.map((s) => (
+            <li>
+              <a href={`/profiles/${s.id}.mobileconfig`} download>
+                <strong>{s.id}</strong> configuration profile
+              </a>{" "}
+              (DNS-over-HTTPS via <code>{s.hostname}</code>)
+            </li>
+          ))}
+        </ul>
+      )}
+    </TabItem>
+  ))}
+</Tabs>
+
+<style>
+  td:first-child,
+  td code {
+    white-space: nowrap;
+  }
+</style>
