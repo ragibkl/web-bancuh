@@ -1,0 +1,78 @@
+---
+title: Troubleshooting
+description: Fix common problems with Bancuh DNS, such as ads still showing, blocked sites, and lookups that fail.
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+## Check whether you're using Bancuh DNS
+
+The quickest check is your [query logs](/logs/). If you see your lookups there,
+you're connected.
+
+From a terminal, you can also ask for a known ad domain. Through Bancuh DNS
+it returns `0.0.0.0`:
+
+```sh
+nslookup zedo.com
+```
+
+To test a particular server directly, whatever your device is set to:
+
+```sh
+nslookup zedo.com <server address>
+```
+
+Use any address from the [server list](/servers/).
+
+## Ads still show up
+
+- **YouTube and some apps** serve ads from the same servers as their content.
+  DNS can't block those without breaking the app. Use an ad blocker in the
+  browser as well.
+- **Old lookups are cached.** Restart the device, or reconnect to Wi-Fi.
+- **Something is bypassing Bancuh DNS:**
+  - Your browser uses its own secure DNS provider. Check
+    [its settings](/setup/browsers/).
+  - Your router only has Bancuh DNS for IPv4, and devices get IPv6 DNS from
+    your provider. See [Don't forget IPv6](/setup/router/#set-it-up).
+  - A VPN or iCloud Private Relay is on.
+  - Your router's DHCP settings hand devices another DNS server.
+
+## A site or app doesn't work
+
+1. Open your [query logs](/logs/) and look for the app's lookups with an answer
+   of `0.0.0.0`. That's the domain being blocked.
+2. Check [what gets blocked](/filtering/). VPNs, crypto exchanges, gambling
+   and brand-new websites are blocked on purpose.
+3. If it shouldn't be blocked,
+   [open an issue](https://github.com/ragibkl/adblock-dns-server/issues) with
+   the domain.
+
+## Nothing loads at all
+
+- **Check the [status page](https://status.bancuh.com).** If your server is
+  down, switch to another one from the [server list](/servers/).
+- **Android shows "Private DNS server cannot be accessed".** The network may
+  block port 853. This is common on hotel, school and office Wi-Fi. Switch
+  Private DNS to *Automatic* while you're on that network.
+- **Hotel or airport Wi-Fi login page won't appear.** Captive portals need the
+  network's own DNS. Turn encrypted DNS off, sign in, then turn it back on.
+
+## It's slow
+
+Pick a server [closer to you](/servers/). Lookups to a server on another
+continent can add a noticeable delay to every new website you open.
+
+## Large networks
+
+Each server limits how many lookups a single IP address can make: above 50 a
+second over UDP, it asks clients to retry over TCP, and above 200 a second it
+drops the excess. A home network never comes close. A school or office with
+hundreds of devices behind one address might. In that case,
+[run your own server](/self-hosting/).
+
+<Aside type="tip" title="Still stuck?">
+[Open an issue on GitHub](https://github.com/ragibkl/adblock-dns-server/issues)
+with your device, how you set it up, and which server you're using.
+</Aside>

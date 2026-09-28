@@ -1,0 +1,86 @@
+---
+title: What gets blocked
+description: The categories Bancuh DNS blocks, how SafeSearch is enforced, and how to report a site that shouldn't be blocked.
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+Bancuh DNS is a **strict family filter**. It blocks far more than ads, and the
+same rules apply to everyone: there are no accounts or per-user settings. If
+you need something different, you can [run your own](/self-hosting/) with a
+blocklist you choose.
+
+The list is rebuilt every day from the sources in the
+[configuration file](https://github.com/ragibkl/adblock-dns-server/blob/master/data/configuration.yaml),
+so it follows those lists as they're updated.
+
+## Categories
+
+| Category                     | Examples of what's blocked                                                                                                              |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| **Ads & tracking**           | Ad networks, analytics and tracking services, disguised (CNAME-cloaked) trackers, ads and telemetry on smart TVs and phones              |
+| **Security**                 | Malware, phishing, scams, hacked sites, stalkerware and spyware, cryptojacking, typo-squatting and domains registered in the last 30 days |
+| **Adult content**            | Pornography, shock and gore sites                                                                                                       |
+| **Gambling**                 | Betting, casino and lottery sites                                                                                                        |
+| **Dating**                   | Dating sites and apps                                                                                                                    |
+| **Drugs & vaping**           | Sites selling drugs or vaping products                                                                                                  |
+| **Piracy**                   | Torrent sites, torrent trackers and torrent client downloads                                                                            |
+| **Crypto**                   | Cryptocurrency exchanges and related services                                                                                           |
+| **Filter bypasses**          | VPN and proxy providers, Tor, and other public DNS services such as Google, Cloudflare and Quad9 DNS                                    |
+
+There are also regional ad lists for Iran, Turkey, Korea, Sweden and Hungary.
+
+<Aside type="caution" title="Things that commonly surprise people">
+- **VPN apps and websites** often stop working, because their domains are
+  blocked.
+- **Other secure DNS services** can't be used as a fallback, so a browser or
+  device set to Google or Cloudflare DNS will lose that setting's effect.
+- **Crypto exchanges** such as Coinbase and Binance are blocked.
+- **Brand-new websites** are blocked for their first 30 days, because most
+  newly registered domains used in attacks are short-lived.
+</Aside>
+
+## SafeSearch
+
+Search engines are forced into their safe mode at the DNS level, so it can't be
+turned off in the search engine's own settings:
+
+| Search engine     | Redirected to                           |
+| ----------------- | --------------------------------------- |
+| Google (all country domains) | `forcesafesearch.google.com` |
+| Bing              | `strict.bing.com`                       |
+| DuckDuckGo        | `safe.duckduckgo.com`                   |
+| Brave Search      | `safesearch.brave.com`                  |
+
+Search engines that can't enforce SafeSearch are blocked.
+
+YouTube is not restricted, but many of its ad domains are blocked. Ads served
+from the same servers as the videos can't be blocked by DNS, so some YouTube
+ads will still play.
+
+## What isn't blocked
+
+Common services that blocklists tend to break by accident are explicitly
+allowed, including Google, Microsoft and Windows Update, Facebook and
+Instagram, Blogspot, Brave and status pages. General social media, streaming
+and messaging, such as YouTube, TikTok, Reddit, Discord and Netflix, work
+normally.
+
+## What a blocked lookup looks like
+
+A blocked domain answers with the address `0.0.0.0` (or `::` for IPv6), or
+"domain not found". Browsers show a connection error rather than a block page,
+because there's no server at that address to show one.
+
+The easiest way to see what was blocked is your own
+[query logs](/logs/): any answer of `0.0.0.0` is a block.
+
+## Something is blocked that shouldn't be
+
+[Open an issue on GitHub](https://github.com/ragibkl/adblock-dns-server/issues)
+with the domain name, which you can copy from your [query logs](/logs/), and
+what stopped working. Allowlist fixes apply to everyone once the next daily
+update runs.
+
+Until then, switch that device back to its normal DNS, or set a different DNS
+just for that browser.

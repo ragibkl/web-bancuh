@@ -1,0 +1,55 @@
+---
+title: Android
+description: Use Android's Private DNS to encrypt your lookups with Bancuh DNS on Wi-Fi and mobile data.
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import ServerPicker from "../../../components/ServerPicker.astro";
+
+Android 9 and newer has a built-in feature called **Private DNS**. It sends
+every DNS lookup to the server you choose over DNS-over-TLS, whichever network
+you're on, whether Wi-Fi, mobile data or a hotspot. Your lookups are encrypted,
+so the network can't read or change them.
+
+## Set it up
+
+Choose one hostname:
+
+<ServerPicker show="dot" />
+
+<Steps>
+
+1. Open **Settings** and find **Private DNS**. Where it lives depends on the
+   phone:
+   - **Pixel and most phones:** Settings › Network & internet › Private DNS
+   - **Samsung:** Settings › Connections › More connection settings › Private DNS
+   - **Xiaomi:** Settings › Connection & sharing › Private DNS
+
+   If you can't find it, search Settings for "Private DNS".
+
+2. Choose **Private DNS provider hostname**. It may be labelled *Designate
+   hostname* or *Custom*.
+
+3. Enter the hostname, for example `sg-dns1.bancuh.com`, and save.
+
+4. Open a few apps, then check your [query logs](/logs/) to confirm it works.
+
+</Steps>
+
+<Aside type="caution" title="There's no automatic fallback">
+Private DNS allows only one hostname. If that server can't be reached, Android
+shows *Private DNS server cannot be accessed* and lookups stop working until
+it's back or you change the setting. If that happens, check the
+[status page](https://status.bancuh.com) and switch to the other server in
+your location.
+</Aside>
+
+## Turn it off
+
+Go back to **Private DNS** and choose **Automatic** (or **Off**).
+
+<Aside title="Why not change the Wi-Fi DNS instead?">
+Android can set a static DNS per Wi-Fi network, but that only covers that one
+network and doesn't encrypt anything. Private DNS is simpler and covers mobile
+data too.
+</Aside>

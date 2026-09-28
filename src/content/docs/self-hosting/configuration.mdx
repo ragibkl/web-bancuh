@@ -1,0 +1,73 @@
+---
+title: Configuration reference
+description: Environment variables for the adblock-dns-server Compose setup, bancuh-dns and dnsdist-acme.
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+## The `.env` file
+
+The Compose setup in `EXAMPLES/default` reads one `.env` file for both
+containers. These are the settings you'll normally change:
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `CONFIG_URL` | The public Bancuh configuration on GitHub | URL or path of the [blocklist configuration](/self-hosting/blocklists/). Use `/local-data/configuration.yaml` for your local `data/` folder. |
+| `FORWARDERS` | _(unset)_ | Comma-separated DNS servers to forward lookups to, such as `1.1.1.1,1.0.0.1`. When unset, the server resolves everything itself, which is best for privacy. |
+| `TLS_ENABLED` | `false` | Turn on DoT and DoH. See [Enable DoT & DoH](/self-hosting/tls/). |
+| `TLS_DOMAIN` | | The server's domain name, used for the certificate. |
+| `TLS_EMAIL` | | Your email address for Let's Encrypt. |
+
+## bancuh-dns
+
+The filtering server. [Source and full documentation](https://github.com/ragibkl/bancuh-dns).
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `CONFIG_URL` | Public Bancuh configuration | URL or path of `configuration.yaml`. |
+| `PORT` | `53` | Port to listen on inside the container. |
+| `FORWARDERS` | _(unset)_ | Upstream DNS servers. When unset, a bundled Unbound recursive resolver is used, with DNSSEC validation. |
+| `FORWARDERS_PORT` | `53` | Port for the forwarders. |
+| `UPDATE_INTERVAL` | `86400` | Seconds between blocklist rebuilds. |
+
+<Aside type="caution">
+Use the image tag `ragibkl/bancuh-dns:2`. The `latest` tag is frozen at an
+older release on purpose.
+
+bancuh-dns also has its own TLS, query log and rate limiting options for
+running without dnsdist-acme. They're experimental, and must stay **off** behind
+dnsdist-acme. The Compose file forces `TLS_ENABLED=false` for it.
+</Aside>
+
+## dnsdist-acme
+
+The front end. [Source and full documentation](https://github.com/ragibkl/dnsdist-acme).
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `PORT` | `53` | Port for plain DNS. |
+| `BACKEND` | `8.8.8.8:53` | Where to send lookups. The Compose file sets this to bancuh-dns at `127.0.0.1:1153`. |
+| `TLS_ENABLED` | `false` | Get a certificate and serve DoT (853) and DoH (443). |
+| `TLS_DOMAIN` | | Domain name for the certificate. |
+| `TLS_EMAIL` | | Email for the Let's Encrypt account. |
+| `ACME_URL` | Let's Encrypt production | A different ACME directory, such as Let's Encrypt staging for testing. |
+| `ACME_CACHE_DIR` | `/etc/letsencrypt/acme-cache` | Where the account key and certificates are stored. |
+
+### Ports
+
+| Port | Protocol | Purpose |
+| --- | --- | --- |
+| 53 | UDP, TCP | Plain DNS |
+| 80 | TCP | Let's Encrypt HTTP-01 challenges (TLS only) |
+| 443 | TCP | DNS-over-HTTPS at `/dns-query` (TLS only) |
+| 853 | TCP | DNS-over-TLS (TLS only) |
+| 8080 | TCP | Query logs page over HTTP |
+| 8443 | TCP | Query logs page over HTTPS (TLS only) |
+
+### Built-in limits
+
+- Over UDP, a single IP (or IPv6 /56) sending more than 50 queries a second is
+  asked to retry over TCP. Above 200 a second, queries are dropped on every
+  protocol.
+- The query logs page keeps each address's last 10 minutes, up to 10,000
+  lookups per address.

@@ -1,0 +1,73 @@
+---
+title: Web browsers
+description: Set Bancuh DNS as the secure DNS provider in Chrome, Edge, Brave and Firefox.
+---
+
+import { Aside, Tabs, TabItem, Steps } from "@astrojs/starlight/components";
+import ServerPicker from "../../../components/ServerPicker.astro";
+
+Most browsers can do DNS-over-HTTPS themselves, whatever the rest of the
+device uses. This is useful on a computer you can't change the network settings
+on, but **it only covers that browser**. Other apps, games and the operating
+system still use the normal DNS.
+
+Choose one URL:
+
+<ServerPicker show="doh" />
+
+<Tabs syncKey="browser">
+  <TabItem label="Chrome">
+    <Steps>
+
+    1. Open **Settings › Privacy and security › Security**.
+    2. Turn on **Use secure DNS**.
+    3. Choose **Add custom DNS service provider** (or *Custom*), and paste the
+       URL.
+
+    </Steps>
+  </TabItem>
+  <TabItem label="Edge">
+    <Steps>
+
+    1. Open **Settings › Privacy, search, and services › Security**.
+    2. Turn on **Use secure DNS to specify how to look up the network address
+       for websites**.
+    3. Choose **Choose a service provider**, and paste the URL.
+
+    </Steps>
+  </TabItem>
+  <TabItem label="Brave">
+    <Steps>
+
+    1. Open **Settings › Privacy and security › Security**.
+    2. Turn on **Use secure DNS**.
+    3. Choose **Add custom DNS service provider**, and paste the URL.
+
+    </Steps>
+  </TabItem>
+  <TabItem label="Firefox">
+    <Steps>
+
+    1. Open **Settings › Privacy & Security**, and scroll to **DNS over
+       HTTPS**.
+    2. Choose **Max Protection**, so Firefox never falls back to the normal
+       DNS.
+    3. Under **Choose provider**, select **Custom** and paste the URL.
+
+    </Steps>
+  </TabItem>
+</Tabs>
+
+<Aside type="note" title="If the option is missing or greyed out">
+Chrome and Edge turn secure DNS off when they detect a managed device
+(for example a work laptop), parental controls, or some antivirus software.
+There's no workaround from the browser itself.
+</Aside>
+
+<Aside type="tip" title="Using Bancuh DNS on the device already?">
+If your device or router already uses Bancuh DNS, you don't need to set it in
+the browser too. Just make sure the browser isn't using a different secure DNS
+provider, because that bypasses Bancuh DNS. Bancuh DNS blocks the well-known
+public DNS services, so a browser set to one of them falls back to your normal
+DNS on its default setting, or stops loading pages on its strictest setting.
+</Aside>

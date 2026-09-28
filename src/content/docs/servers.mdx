@@ -1,0 +1,30 @@
+---
+title: Servers
+description: Every Bancuh DNS server, with its IP addresses, DNS-over-TLS hostname, DNS-over-HTTPS URL and query log links.
+---
+
+import { Aside } from "@astrojs/starlight/components";
+import ServerMap from "../../components/ServerMap.astro";
+import ServerTable from "../../components/ServerTable.astro";
+
+<ServerMap />
+
+Every server runs the same blocklist and supports:
+
+- **Plain DNS** on port 53, over UDP and TCP, on IPv4 and IPv6
+- **DNS-over-TLS** on port 853
+- **DNS-over-HTTPS** on port 443, at the path `/dns-query`
+- A **query logs page** that shows your own recent lookups. See [Query logs & privacy](/logs/).
+
+Current health for each server is on the [status page](https://status.bancuh.com).
+
+<Aside type="tip" title="Use two servers">
+Where your device asks for a second DNS server, use the other server from the
+same location. If one is down for maintenance, lookups carry on through the
+other. If a location has only one server, pair it with the next-closest
+location.
+</Aside>
+
+## All servers
+
+<ServerTable />

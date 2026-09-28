@@ -1,0 +1,18 @@
+# Server locations, shown on the map and used to group servers.
+# Coordinates are [longitude, latitude].
+
+- id: singapore
+  name: Singapore
+  coordinates: [103.8198, 1.3521]
+
+- id: tokyo
+  name: Tokyo
+  coordinates: [139.6503, 35.6762]
+
+- id: france
+  name: France
+  coordinates: [2.3522, 48.8566]
+
+- id: dallas
+  name: Dallas
+  coordinates: [-96.797, 32.7767]

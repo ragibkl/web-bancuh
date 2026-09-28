@@ -1,0 +1,79 @@
+---
+title: FAQ
+description: Common questions about Bancuh DNS.
+---
+
+## How much does it cost?
+
+Nothing. There's no sign-up and no paid tier. The servers are run out of pocket
+as a personal project.
+
+## How does DNS ad blocking work?
+
+Before your device can load anything from the internet, it looks up the
+server's address with DNS, like looking up a number in a phone book. Bancuh DNS
+answers those lookups normally, except for names on its
+[blocklist](/filtering/). For those, it answers with an address that goes
+nowhere (`0.0.0.0`), so the ad, tracker or site never loads.
+
+Because it works at the DNS level, it covers every app on a device, and every
+device on a network if you set it on your router, including ones where you
+can't install an ad blocker such as smart TVs and consoles.
+
+## Who is it for?
+
+Anyone who wants fewer ads and a safer internet, without installing anything.
+It's especially suited to families: set it on your home router and every
+device, including children's, gets ad blocking, malware protection, an adult
+content filter and enforced SafeSearch.
+
+## Can I turn off some of the blocking?
+
+No. Everyone gets the same filter. If you need different rules, for example to
+allow VPNs or crypto sites, you can [run your own copy](/self-hosting/) with
+your own blocklist.
+
+## Do you log my browsing?
+
+Query logs are kept in memory for 10 minutes so you can see your own lookups,
+and are then deleted. Nobody else can see yours. See
+[Query logs & privacy](/logs/) for the details.
+
+## Should I use a browser ad blocker instead?
+
+Use both if you can. Browser extensions such as uBlock Origin can remove ads
+that DNS can't, like YouTube's, and tidy up the empty spaces left behind. But
+they only work in that one browser. Bancuh DNS covers other browsers, apps and
+devices that have no extensions, and a whole home network at once.
+
+## Why not use a hosts file?
+
+A hosts file blocks domains on one device without any DNS server, and works
+offline. But it has to be kept up to date by hand, needs admin or root access
+(which rules out most phones), has to be set up on every device, and is hard to
+undo if something breaks. Bancuh DNS gives you the same effect with one
+setting, and updates itself every day.
+
+## How is it different from AdGuard DNS or NextDNS?
+
+Those are excellent services with dashboards, per-user settings and paid
+tiers. Bancuh DNS is simpler: free, no account, one strict family filter for
+everyone, and completely open source, so you can
+[run the same thing yourself](/self-hosting/).
+
+## Will it slow down my internet?
+
+Usually it does the opposite, because pages don't wait for ads and trackers to
+load. Choose the [closest server](/servers/) to keep lookups fast.
+
+## Can I use it at a school or business?
+
+Yes, but there's no uptime guarantee, and very large networks behind a single
+IP address may hit the per-IP limits. See
+[large networks](/troubleshooting/#large-networks). For anything important,
+[host your own](/self-hosting/).
+
+## Something doesn't work. How do I get help?
+
+Start with [troubleshooting](/troubleshooting/). If that doesn't help,
+[open an issue on GitHub](https://github.com/ragibkl/adblock-dns-server/issues).

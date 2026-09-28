@@ -1,0 +1,115 @@
+---
+title: Run with Docker Compose
+description: Start your own adblock DNS server with the adblock-dns-server Docker Compose setup.
+---
+
+import { Aside, Steps, FileTree } from "@astrojs/starlight/components";
+
+This guide starts a server that answers plain DNS on port 53 with the same
+blocklist as Bancuh DNS. Adding DoT and DoH is a
+[separate step](/self-hosting/tls/).
+
+## Before you start
+
+Make sure [Docker](https://docs.docker.com/engine/install/) and the Compose
+plugin are installed, and that nothing else is using port 53:
+
+```sh
+sudo ss -lntup 'sport = :53'
+```
+
+If this lists nothing, skip to [Start the server](#start-the-server).
+
+### Free port 53 from systemd-resolved
+
+On Ubuntu and many other distributions, `systemd-resolved` runs a local DNS
+stub on port 53. Turn off just the stub, and keep resolved for the machine's
+own lookups:
+
+```sh
+sudo mkdir -p /etc/systemd/resolved.conf.d
+printf '[Resolve]\nDNSStubListener=no\n' | sudo tee /etc/systemd/resolved.conf.d/no-stub.conf
+sudo ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
+sudo systemctl restart systemd-resolved
+```
+
+Run the `ss` command again to confirm port 53 is free.
+
+## Start the server
+
+<Steps>
+
+1. Clone the repository:
+
+   ```sh
+   git clone https://github.com/ragibkl/adblock-dns-server.git
+   cd adblock-dns-server/EXAMPLES/default
+   ```
+
+2. Start it:
+
+   ```sh
+   ./start.sh
+   ```
+
+   The first run creates a `.env` file from `sample.env`, pulls the images and
+   starts both containers.
+
+3. Wait for the first blocklist build. The server answers lookups straight
+   away, but nothing is blocked until the list has been downloaded and
+   compiled, which takes a few minutes. Follow along with:
+
+   ```sh
+   docker compose logs -f dns
+   ```
+
+</Steps>
+
+<FileTree>
+- adblock-dns-server/
+  - data/ blocklist configuration, mounted into the dns container
+    - configuration.yaml
+    - blacklist.d/
+    - whitelist.d/
+    - overrides.d/
+  - EXAMPLES/
+    - default/
+      - docker-compose.yml
+      - sample.env
+      - .env created on first start
+      - start.sh
+      - stop.sh
+</FileTree>
+
+## Test it
+
+From another machine, look up an ad domain and a normal one:
+
+```sh
+nslookup zedo.com <your server IP>     # 0.0.0.0, blocked
+nslookup example.com <your server IP>  # a real address
+```
+
+Then open `http://<your server IP>:8080/logs` from the same machine to see
+those lookups.
+
+Once it works, point your devices or router at it using the
+[setup guides](/start/), with your server's address in place of the Bancuh
+ones.
+
+## Day-to-day
+
+| Task | Command (in `EXAMPLES/default`) |
+| --- | --- |
+| Stop | `./stop.sh` |
+| Update to the latest images and config | `git pull && ./start.sh` |
+| Apply changes to `.env` | `./start.sh` |
+| View logs | `docker compose logs -f` |
+
+The blocklist refreshes itself every day. You don't need to restart for that.
+
+<Aside type="note">
+The `dns` container is published on port 1153 of the host. That's the internal
+hop from dnsdist to bancuh-dns, which bypasses rate limiting and the query
+logs, so block port 1153 in your firewall on a public server.
+</Aside>

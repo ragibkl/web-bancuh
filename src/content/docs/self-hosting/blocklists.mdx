@@ -1,0 +1,112 @@
+---
+title: Customise the blocklist
+description: Add blocklist sources, allow domains, and rewrite answers on your own adblock DNS server.
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+By default, your server downloads the same configuration as the public Bancuh
+DNS service, straight from GitHub. To change what's blocked, point it at your
+own copy instead.
+
+## Use your own configuration
+
+<Steps>
+
+1. Edit the files under `data/` in your clone of adblock-dns-server. For quick
+   additions, use the two files that are already wired in:
+   - `data/blacklist.d/__extra_blacklist.hosts`: domains to block
+   - `data/whitelist.d/__extra_whitelist.hosts`: domains to allow
+
+2. In `EXAMPLES/default/.env`, point `CONFIG_URL` at the local file. The
+   `data/` folder is mounted into the container at `/local-data/`:
+
+   ```ini title=".env"
+   CONFIG_URL=/local-data/configuration.yaml
+   ```
+
+3. Run `./start.sh`. The list is rebuilt on start and then once a day.
+
+</Steps>
+
+<Aside type="tip">
+`CONFIG_URL` can also be a URL. If you keep your configuration in your own
+fork on GitHub, use the file's "raw" URL and every server you run picks up
+your changes on its next daily update.
+</Aside>
+
+## The configuration file
+
+`configuration.yaml` has three lists. Each entry names a `format` and a `path`,
+which is either a URL or a path relative to the configuration file.
+
+```yaml title="data/configuration.yaml"
+blacklist:
+  - format: hosts
+    path: https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+  - format: domains
+    path: https://big.oisd.nl/domainswild
+  - format: hosts
+    path: ./blacklist.d/__extra_blacklist.hosts
+
+whitelist:
+  - format: domains
+    path: ./whitelist.d/misc_whitelist.txt
+  - format: zone
+    path: ./overrides.d/google-safesearch.zone
+
+overrides:
+  - format: cname
+    path: ./overrides.d/google-safesearch.zone
+```
+
+| List | What it does | Formats |
+| --- | --- | --- |
+| `blacklist` | Domains to block. They answer `0.0.0.0` / `::`. | `hosts`, `domains` |
+| `whitelist` | Domains that are never blocked, even if a blacklist has them. | `hosts`, `domains`, `zone` |
+| `overrides` | Domains to answer with a different name (a CNAME). | `cname` |
+
+### Formats
+
+- **`hosts`**: the classic hosts file format. The address is ignored.
+
+  ```
+  0.0.0.0 ads.example.com
+  127.0.0.1 tracker.example.net
+  ```
+
+- **`domains`**: one domain per line. Use `*.example.com` to include
+  subdomains.
+
+  ```
+  ads.example.com
+  *.tracker.example.net
+  ```
+
+- **`cname`** (and **`zone`** in the whitelist): a domain, `CNAME`, and the
+  name to answer with.
+
+  ```
+  www.bing.com    CNAME   strict.bing.com.
+  ```
+
+Lines starting with `#` are comments.
+
+## Common changes
+
+**Turn off SafeSearch.** Remove the `*-safesearch.zone` entries from both
+`whitelist` and `overrides`. They're listed in the whitelist too so the
+search engines themselves are never blocked.
+
+**Allow a category.** Remove its sources from `blacklist`. For example, to
+allow VPNs, remove the VPN, proxy and `doh-vpn-proxy-bypass` lists, and the VPN
+section of `misc_blacklist.txt`.
+
+**Block something extra.** Add the domain to `__extra_blacklist.hosts`, or add
+a new source URL under `blacklist`.
+
+<Aside type="note">
+Some entries in `overrides.d/ignore-whitelist.zone` point domains like
+`doubleclick.net` at a name that doesn't exist. That blocks them even though a
+whitelist source allows them.
+</Aside>

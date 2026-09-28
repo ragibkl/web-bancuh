@@ -1,0 +1,81 @@
+---
+title: Bancuh DNS
+description: Free public adblock DNS. Blocks ads, trackers, malware and adult content for every device on your network, with nothing to install.
+template: splash
+hero:
+  title: Free adblock DNS for your whole network
+  tagline: Block ads, trackers, malware and adult content on every phone, laptop, TV and tablet at once. No app, no account, no cost. Change one DNS setting and you're done.
+  actions:
+    - text: Get started
+      link: /start/
+      icon: right-arrow
+    - text: Self-host it
+      link: /self-hosting/
+      icon: seti:docker
+      variant: minimal
+---
+
+import { Card, CardGrid, LinkCard } from "@astrojs/starlight/components";
+import ServerMap from "../../components/ServerMap.astro";
+
+## Why Bancuh DNS
+
+<CardGrid>
+  <Card title="Family-safe by default" icon="approve-check">
+    Ads, trackers, malware, phishing and scams are blocked, along with adult
+    content, gambling and dating sites. SafeSearch is enforced on Google, Bing,
+    DuckDuckGo and Brave Search. [See what gets blocked](/filtering/).
+  </Card>
+  <Card title="Free, no strings" icon="heart">
+    No sign-up, no subscription and no ads of its own. The servers are paid for
+    out of pocket and will stay free for as long as possible.
+  </Card>
+  <Card title="One setting, every device" icon="laptop">
+    Set it on your Wi-Fi router and everything on the network is covered,
+    including smart TVs and game consoles where you can't install an ad
+    blocker.
+  </Card>
+  <Card title="Encrypted if you want it" icon="seti:lock">
+    Every server speaks plain DNS, DNS-over-TLS and DNS-over-HTTPS, so phones
+    and laptops stay protected on any network, including mobile data.
+  </Card>
+  <Card title="Always up to date" icon="random">
+    The blocklist is rebuilt every day from dozens of community-maintained
+    sources. You never have to update anything.
+  </Card>
+  <Card title="Open source" icon="github">
+    The DNS server, the proxy in front of it, the blocklist sources and this
+    website are all [on GitHub](https://github.com/ragibkl/adblock-dns-server).
+    You can run your own copy in a few minutes.
+  </Card>
+</CardGrid>
+
+## Servers around the world
+
+Pick the location closest to you for the fastest answers. Each location has its
+own servers, and every server supports IPv4 and IPv6.
+
+<ServerMap />
+
+<CardGrid>
+  <LinkCard
+    title="Quick start"
+    description="Choose a server and a setup method for your device."
+    href="/start/"
+  />
+  <LinkCard
+    title="Server addresses"
+    description="Every IP address, DoT hostname and DoH URL in one place."
+    href="/servers/"
+  />
+  <LinkCard
+    title="Service status"
+    description="Live health checks for every server."
+    href="https://status.bancuh.com"
+  />
+  <LinkCard
+    title="Run your own"
+    description="The same setup Bancuh DNS uses, packaged with Docker Compose."
+    href="/self-hosting/"
+  />
+</CardGrid>
