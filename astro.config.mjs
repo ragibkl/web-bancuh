@@ -34,6 +34,11 @@ export default defineConfig({
       ],
       social: [
         {
+          icon: "approve-check-circle",
+          label: "Service status",
+          href: "https://status.bancuh.com",
+        },
+        {
           icon: "github",
           label: "GitHub",
           href: "https://github.com/ragibkl/adblock-dns-server",
