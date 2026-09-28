@@ -49,6 +49,21 @@ Use any address from the [server list](/servers/).
    [open an issue](https://github.com/ragibkl/adblock-dns-server/issues) with
    the domain.
 
+## Using a site that's blocked
+
+Some sites deliberately break when ads are blocked, and some blocks are on
+purpose. Allowing a domain would allow it for everyone, so for a one-off,
+switch just that device to another DNS for a while:
+
+- Set a **plain DNS address**, such as `1.1.1.1` or `8.8.8.8`, in the device's
+  network settings. On Android, turn Private DNS off first.
+- **Hostnames of other secure DNS services won't work.** Bancuh DNS blocks
+  names like `dns.google` and `one.one.one.one`. So if your router uses
+  Bancuh DNS, an Android phone set to one of those in Private DNS can't
+  find it. Use a plain address instead.
+
+Switch back when you're done.
+
 ## Nothing loads at all
 
 - **Check the [status page](https://status.bancuh.com).** If your server is

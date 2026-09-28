@@ -26,12 +26,12 @@
   ipv6: 2400:8902::f03c:94ff:fee9:70
 
 - id: fr-dns1
-  location: france
+  location: paris
   ipv4: 51.158.99.7
   ipv6: 2001:bc8:710:1efa:dc00:ff:fe34:a339
 
 - id: fr-dns2
-  location: france
+  location: paris
   ipv4: 163.172.180.231
   ipv6: 2001:bc8:710:1efb:dc00:ff:fe34:a1d7
 

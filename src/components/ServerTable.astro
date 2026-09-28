@@ -8,6 +8,7 @@ const locations = await getLocationsWithServers();
 {locations.map((l) => (
   <>
     <h3 id={`location-${l.id}`}>{l.name}</h3>
+    <p>Hosted by {l.provider}.</p>
     {l.servers.map((s) => (
       <div class="server">
         <h4 id={s.id}>{s.id}</h4>
