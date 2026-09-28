@@ -29,13 +29,18 @@ stuck. It fits: the blocklist is a mix of dozens of others.
 
 | Year | |
 | --- | --- |
-| 2017 | Started as an ad-blocking DNS server for personal use, published on GitHub. |
-| 2018 | Other people start using it, and the first thank-you arrives as a GitHub issue. |
+| 2015 | Started on a Raspberry Pi at home, to block ads on the family's phones. Moved to two rented servers after one too many power cuts, and offered to anyone through a series of blog posts. |
+| 2017 | The code published on GitHub. |
+| 2018 | The first thank-you from a stranger arrives as a GitHub issue. |
 | 2020 | Servers added in Paris and Tokyo. SafeSearch enforcement added at users' request. |
-| 2022 | DNS-over-HTTPS and DNS-over-TLS on every server. |
-| 2023 | The DNS server rewritten from scratch in Rust, with a new front end built on dnsdist. |
-| 2024 | Lookups resolved by each server itself instead of being forwarded to Google or Cloudflare. A server added in Dallas. |
+| 2021 | The servers stop forwarding lookups to public resolvers, and resolve them themselves. |
+| 2022 | DNS-over-HTTPS and DNS-over-TLS on every server, using dnsdist. |
+| 2023 | The DNS server rewritten from scratch in Rust, using a fraction of the memory. For a few months, it forwarded lookups to public resolvers again. |
+| 2024 | Each server resolves lookups itself again. A server added in Dallas. |
 | 2026 | The resolver moves to Unbound, and this website is rebuilt. |
+
+The longer story, starting with the Raspberry Pi, is on
+[ragib.dev](https://ragib.dev/writing/how-bancuh-dns-started/).
 
 ## The people behind it
 
