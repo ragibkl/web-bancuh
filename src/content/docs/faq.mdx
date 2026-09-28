@@ -33,11 +33,42 @@ No. Everyone gets the same filter. If you need different rules, for example to
 allow VPNs or crypto sites, you can [run your own copy](/self-hosting/) with
 your own blocklist.
 
+## Could you offer a lighter, ads-only server?
+
+Not for now. Every server runs the same configuration, because running a
+second filter in each location would double the cost. Protection for the
+whole family, with nothing to configure, is also what sets Bancuh DNS apart;
+there are plenty of good ads-only services if that's what you need.
+
+## Why are Google Ads and Google Analytics blocked?
+
+Because people use Bancuh DNS expecting ads and analytics to be blocked. A few
+sites and apps misbehave without them. For those, use the
+[per-device workaround](/troubleshooting/#using-a-site-thats-blocked).
+
+## Why is there no "blocked" page?
+
+A blocked domain simply doesn't resolve, so there's no server to show a page.
+Showing one would mean answering with the address of a Bancuh server, which
+would then have to present a certificate for sites it doesn't own. Browsers
+would show a security warning instead. Use your
+[query logs](/logs/) to see what was blocked.
+
 ## Do you log my browsing?
 
 Query logs are kept in memory for 10 minutes so you can see your own lookups,
 and are then deleted. Nobody else can see yours. See
 [Query logs & privacy](/logs/) for the details.
+
+Ideally there would be no logs at all, but without them there's no way to
+work out why a site or app broke, especially on phones where there are no
+developer tools. Ten minutes, visible only to you, is the compromise.
+
+## Are my lookups passed on to Google or Cloudflare?
+
+No. Early on, the servers forwarded lookups to public DNS services. Since
+2024, each server resolves names itself, asking each website's own DNS
+servers directly.
 
 ## Should I use a browser ad blocker instead?
 
@@ -72,6 +103,24 @@ Yes, but there's no uptime guarantee, and very large networks behind a single
 IP address may hit the per-IP limits. See
 [large networks](/troubleshooting/#large-networks). For anything important,
 [host your own](/self-hosting/).
+
+## Can you add a server in my country?
+
+Maybe. New locations are added where there are enough users to justify the
+cost. Open an [issue on GitHub](https://github.com/ragibkl/adblock-dns-server/issues)
+to ask, and in the meantime use the closest [existing server](/servers/).
+
+## Can I suggest a blocklist?
+
+Yes. Open an [issue on GitHub](https://github.com/ragibkl/adblock-dns-server/issues)
+with a link to the list. Much of the current list came from user suggestions.
+
+## What does "Bancuh" mean?
+
+It's Malay for *to mix*, as in stirring up a drink. It started as a domain
+name that happened to be available, and users began calling the service
+"Bancuh DNS". It turned out to fit: the blocklist is a mix of dozens of
+others.
 
 ## Something doesn't work. How do I get help?
 

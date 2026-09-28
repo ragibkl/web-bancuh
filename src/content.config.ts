@@ -8,6 +8,7 @@ const locations = defineCollection({
   loader: file("src/data/locations.yaml"),
   schema: z.object({
     name: z.string(),
+    provider: z.string(),
     coordinates: z.tuple([
       z.number().min(-180).max(180),
       z.number().min(-90).max(90),

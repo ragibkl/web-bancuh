@@ -19,6 +19,7 @@ export type Server = {
 export type Location = {
   id: string;
   name: string;
+  provider: string;
   coordinates: [number, number];
 };
 
