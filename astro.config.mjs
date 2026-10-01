@@ -14,6 +14,10 @@ export default defineConfig({
         "Free public adblock DNS. Blocks ads, trackers, malware and adult content for your whole network.",
       favicon: "/favicon.ico",
       head: [
+        { tag: "meta", attrs: { property: "og:image", content: "https://bancuh.com/og.png" } },
+        { tag: "meta", attrs: { property: "og:image:width", content: "1200" } },
+        { tag: "meta", attrs: { property: "og:image:height", content: "630" } },
+        { tag: "meta", attrs: { name: "twitter:image", content: "https://bancuh.com/og.png" } },
         {
           tag: "link",
           attrs: {
