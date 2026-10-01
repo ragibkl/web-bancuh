@@ -15,8 +15,8 @@ export default defineConfig({
       favicon: "/favicon.ico",
       head: [
         { tag: "meta", attrs: { property: "og:image", content: "https://bancuh.com/og.png" } },
-        { tag: "meta", attrs: { property: "og:image:width", content: "1200" } },
-        { tag: "meta", attrs: { property: "og:image:height", content: "630" } },
+        { tag: "meta", attrs: { property: "og:image:width", content: "2400" } },
+        { tag: "meta", attrs: { property: "og:image:height", content: "1260" } },
         { tag: "meta", attrs: { name: "twitter:image", content: "https://bancuh.com/og.png" } },
         {
           tag: "link",
