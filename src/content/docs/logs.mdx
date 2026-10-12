@@ -3,7 +3,6 @@ title: Query logs & privacy
 description: See your own recent DNS lookups on each Bancuh server, and what the servers keep.
 ---
 
-import { Aside } from "@astrojs/starlight/components";
 import { getServers } from "../../lib/servers";
 
 export const servers = await getServers();
@@ -28,7 +27,7 @@ Open the link for the server you set up:
       <tr>
         <td>{s.id}</td>
         <td>
-          <a href={s.logs.https}>HTTPS</a> · <a href={s.logs.ipv4}>IPv4 only</a> · <a href={s.logs.ipv6}>IPv6 only</a>
+          <a href={s.logs.https}>Auto</a> · <a href={s.logs.ipv4}>IPv4 only</a> · <a href={s.logs.ipv6}>IPv6 only</a>
         </td>
       </tr>
     ))}
@@ -46,7 +45,7 @@ is using now**. If they don't match, the page is empty even though Bancuh DNS
 is working:
 
 - **IPv4 vs IPv6.** Your router may send DNS over IPv4 while your browser
-  opens the page over IPv6, or the other way round. The **HTTPS** link lets
+  opens the page over IPv6, or the other way round. The **Auto** link lets
   your browser choose. The **IPv4 only** and **IPv6 only** links force one, so
   try both.
 - **VPNs and proxies.** If your browser goes through a VPN, iCloud Private
@@ -54,12 +53,6 @@ is working:
 - **Nothing recent.** Only the last 10 minutes are kept. Browse a little, then
   reload.
 - **Wrong server.** Open the logs on the same server you set up.
-
-<Aside type="note" title="Why the IPv4 and IPv6 links aren't HTTPS">
-Certificates are issued for the server hostnames, not their IP addresses, so
-only the hostname link can use HTTPS. The address links use plain HTTP on port
-8080, and show only your own lookups, the same as the HTTPS page.
-</Aside>
 
 ## Privacy
 
