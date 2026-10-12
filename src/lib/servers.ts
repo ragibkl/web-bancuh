@@ -48,11 +48,12 @@ export async function getServers(): Promise<Server[]> {
       ipv6: data.ipv6,
       doh: `https://${hostname}/dns-query`,
       logs: {
-        // Only the hostname has a certificate, so https needs it. The plain
-        // http links pin the address family, which the logs page matches on.
+        // v4.<host> has only an A record and v6.<host> only AAAA, so those
+        // links pin the address family, which the logs page matches on. All
+        // three names are on the server's certificate.
         https: `https://${hostname}:8443/logs`,
-        ipv4: `http://${data.ipv4}:8080/logs`,
-        ipv6: `http://[${data.ipv6}]:8080/logs`,
+        ipv4: `https://v4.${hostname}:8443/logs`,
+        ipv6: `https://v6.${hostname}:8443/logs`,
       },
       location,
     };
