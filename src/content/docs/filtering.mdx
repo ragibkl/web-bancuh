@@ -73,12 +73,13 @@ A blocked domain answers with the address `0.0.0.0` (or `::` for IPv6), or
 because there's no server at that address to show one.
 
 The easiest way to see what was blocked is your own
-[query logs](/logs/): any answer of `0.0.0.0` is a block.
+[query logs](/logs/live/), which mark each one **Blocked**. A few ad domains
+are blocked with "domain not found" instead, and show as `NXDOMAIN`.
 
 ## Something is blocked that shouldn't be
 
 [Open an issue on GitHub](https://github.com/ragibkl/adblock-dns-server/issues)
-with the domain name, which you can copy from your [query logs](/logs/), and
+with the domain name, which you can copy from your [query logs](/logs/live/), and
 what stopped working. Allowlist fixes apply to everyone once the next daily
 update runs.
 

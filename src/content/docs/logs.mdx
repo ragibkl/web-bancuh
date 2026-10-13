@@ -3,7 +3,6 @@ title: Query logs & privacy
 description: See your own recent DNS lookups on each Bancuh server, and what the servers keep.
 ---
 
-import LiveLogs from "../../components/LiveLogs.astro";
 import { getServers } from "../../lib/servers";
 
 export const servers = await getServers();
@@ -12,13 +11,13 @@ Every Bancuh server keeps the DNS lookups it received from your IP address for
 10 minutes. Use them to confirm you're connected, or to find out which domain a
 broken app or website needs.
 
-## Your recent lookups
+## See your lookups
 
-This page asks every server, over IPv4 and over IPv6, for the lookups that came
-from your address, and lists them together. It updates every few seconds while
-it's open.
+**[Open your live lookups →](/logs/live/)**
 
-<LiveLogs />
+That page asks every server, over IPv4 and over IPv6, for the lookups that
+came from your address, and lists them together. It updates every few seconds
+while it's open.
 
 ## Open one server's logs
 
@@ -54,8 +53,8 @@ is using now**. If they don't match, the page is empty even though Bancuh DNS
 is working:
 
 - **IPv4 vs IPv6.** Your router may send DNS over IPv4 while your browser
-  opens the page over IPv6, or the other way round. The list at the top of this
-  page checks both for you. On a single server's page, the **Auto** link lets
+  opens the page over IPv6, or the other way round. The [live view](/logs/live/)
+  checks both for you. On a single server's page, the **Auto** link lets
   your browser choose. The **IPv4 only** and **IPv6 only** links force one, so
   try both. If your network has no IPv6, the **IPv6 only** link won't open at
   all, and your browser may say the server can't be found.
