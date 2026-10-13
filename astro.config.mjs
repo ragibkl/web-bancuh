@@ -58,6 +58,7 @@ export default defineConfig({
           items: [
             { label: "Quick start", slug: "start" },
             { label: "Servers", slug: "servers" },
+            { label: "Your lookups (live)", link: "/logs/live/" },
             {
               label: "Service status",
               link: "https://status.bancuh.com",
