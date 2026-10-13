@@ -358,18 +358,21 @@ const servers = (await getServers()).map((s) => ({
     setup(root);
 </script>
 
-<style>
+<style is:global>
+  /* Global, not scoped: the rows and cells are built by the script at
+     runtime, and Astro's scoping attribute only reaches elements in this
+     file's markup. Every selector starts at .live-logs instead. */
   .live-logs {
     margin-top: 1rem;
   }
 
-  .ll-summary {
+  .live-logs .ll-summary {
     font-weight: 600;
     margin-bottom: 0.75rem;
   }
 
-  .ll-status-wrap,
-  .ll-table-wrap {
+  .live-logs .ll-status-wrap,
+  .live-logs .ll-table-wrap {
     overflow-x: auto;
   }
 
@@ -392,11 +395,11 @@ const servers = (await getServers()).map((s) => ({
     font-weight: 600;
   }
 
-  .ll-status {
+  .live-logs .ll-status {
     margin-bottom: 1rem;
   }
 
-  .ll-controls {
+  .live-logs .ll-controls {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem 1rem;
@@ -404,7 +407,7 @@ const servers = (await getServers()).map((s) => ({
     margin-bottom: 0.5rem;
   }
 
-  .ll-filter {
+  .live-logs .ll-filter {
     flex: 1 1 12rem;
     padding: 0.35rem 0.5rem;
     border: 1px solid var(--sl-color-gray-5);
@@ -413,7 +416,7 @@ const servers = (await getServers()).map((s) => ({
     color: var(--sl-color-white);
   }
 
-  .ll-live {
+  .live-logs .ll-live {
     padding: 0.3rem 0.75rem;
     border: 1px solid var(--sl-color-gray-5);
     border-radius: 0.25rem;
@@ -422,25 +425,25 @@ const servers = (await getServers()).map((s) => ({
     cursor: pointer;
   }
 
-  .ll-muted {
+  .live-logs .ll-muted {
     color: var(--sl-color-gray-3);
   }
 
-  .ll-active {
+  .live-logs .ll-active {
     color: var(--sl-color-white);
     font-weight: 600;
   }
 
-  .ll-nowrap {
+  .live-logs .ll-nowrap {
     white-space: nowrap;
   }
 
-  .ll-name,
-  .ll-answer {
+  .live-logs .ll-name,
+  .live-logs .ll-answer {
     word-break: break-all;
   }
 
-  .ll-badge {
+  .live-logs .ll-badge {
     display: inline-block;
     padding: 0 0.4rem;
     border-radius: 0.25rem;
@@ -450,7 +453,7 @@ const servers = (await getServers()).map((s) => ({
     color: var(--sl-color-red-high);
   }
 
-  .ll-note {
+  .live-logs .ll-note {
     color: var(--sl-color-gray-3);
     font-size: var(--sl-text-sm);
   }
