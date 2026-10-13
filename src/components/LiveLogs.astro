@@ -14,22 +14,11 @@ const servers = (await getServers()).map((s) => ({
 ---
 
 <div class="live-logs not-content" data-servers={JSON.stringify(servers)}>
-  <p class="ll-summary" aria-live="polite">
-    Checking every server…
-  </p>
-
-  <div class="ll-status-wrap">
-    <table class="ll-status">
-      <thead>
-        <tr>
-          <th>Server</th>
-          <th>IPv4</th>
-          <th>IPv6</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+  <div class="ll-summary" aria-live="polite">
+    <span class="ll-chip ll-muted">Checking every server…</span>
   </div>
+
+  <div class="ll-servers"></div>
 
   <div class="ll-controls">
     <input
@@ -52,9 +41,7 @@ const servers = (await getServers()).map((s) => ({
         <tr>
           <th>Time</th>
           <th>Name</th>
-          <th>Type</th>
           <th>Result</th>
-          <th>Server</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -113,7 +100,7 @@ const servers = (await getServers()).map((s) => ({
   function setup(root: HTMLElement) {
     const servers: ServerInfo[] = JSON.parse(root.dataset.servers ?? "[]");
     const summary = root.querySelector<HTMLElement>(".ll-summary")!;
-    const statusBody = root.querySelector<HTMLElement>(".ll-status tbody")!;
+    const serverGrid = root.querySelector<HTMLElement>(".ll-servers")!;
     const tableBody = root.querySelector<HTMLElement>(".ll-table tbody")!;
     const note = root.querySelector<HTMLElement>(".ll-note")!;
     const filter = root.querySelector<HTMLInputElement>(".ll-filter")!;
@@ -137,22 +124,32 @@ const servers = (await getServers()).map((s) => ({
       })),
     );
 
+    // One card per server, with a line each for IPv4 and IPv6.
     const cells = new Map<Endpoint, HTMLElement>();
     for (const server of servers) {
-      const tr = document.createElement("tr");
-      const name = document.createElement("td");
-      name.textContent = server.id;
+      const card = document.createElement("div");
+      card.className = "ll-card";
+      const title = document.createElement("div");
+      title.className = "ll-card-title";
+      const id = document.createElement("strong");
+      id.textContent = server.id;
       const where = document.createElement("span");
       where.className = "ll-muted";
-      where.textContent = ` ${server.location}`;
-      name.append(where);
-      tr.append(name);
+      where.textContent = server.location;
+      title.append(id, where);
+      card.append(title);
       for (const ep of endpoints.filter((e) => e.server === server)) {
-        const td = document.createElement("td");
-        cells.set(ep, td);
-        tr.append(td);
+        const line = document.createElement("div");
+        line.className = "ll-card-line";
+        const label = document.createElement("span");
+        label.className = "ll-muted";
+        label.textContent = ep.family === "ipv4" ? "IPv4" : "IPv6";
+        const value = document.createElement("span");
+        line.append(label, value);
+        cells.set(ep, value);
+        card.append(line);
       }
-      statusBody.append(tr);
+      serverGrid.append(card);
     }
 
     const live = () => Date.now() < liveUntil;
@@ -220,54 +217,76 @@ const servers = (await getServers()).map((s) => ({
     }
 
     function statusCell(ep: Endpoint) {
-      const td = cells.get(ep)!;
+      const value = cells.get(ep)!;
+      const card = value.closest<HTMLElement>(".ll-card")!;
+      value.title = "";
       if (ep.state === "pending") {
-        td.textContent = "…";
-        td.className = "ll-muted";
+        value.textContent = "…";
+        value.className = "ll-muted";
       } else if (ep.state === "error") {
-        td.textContent = "not reachable";
-        td.className = "ll-muted";
+        value.textContent = "–";
+        value.title = "Not reachable from this browser";
+        value.className = "ll-muted";
       } else {
         const n = countFor(ep);
-        td.textContent =
-          n === 0 ? "no lookups" : `${n} lookup${n === 1 ? "" : "s"}`;
-        td.className = n === 0 ? "ll-muted" : "ll-active";
+        value.textContent = n === 0 ? "none" : String(n);
+        value.className = n === 0 ? "ll-muted" : "ll-active";
       }
+      const inUse = endpoints.some(
+        (e) => e.server === ep.server && countFor(e) > 0,
+      );
+      card.classList.toggle("ll-in-use", inUse);
+    }
+
+    function chip(text: string, kind = "") {
+      const span = document.createElement("span");
+      span.className = `ll-chip ${kind}`.trim();
+      span.textContent = text;
+      return span;
     }
 
     function renderSummary() {
-      const done = endpoints.filter((e) => e.state !== "pending");
-      const v4 = endpoints.filter((e) => e.family === "ipv4");
+      const pending = endpoints.some((e) => e.state === "pending");
       const v6 = endpoints.filter((e) => e.family === "ipv6");
-      const ip4 = v4.find((e) => e.clientIp)?.clientIp;
+      const ip4 = endpoints.find(
+        (e) => e.family === "ipv4" && e.clientIp,
+      )?.clientIp;
       const ip6 = v6.find((e) => e.clientIp)?.clientIp;
-      const noV6 = v6.every((e) => e.state === "error");
-
       const using = endpoints
         .filter((e) => countFor(e) > 0)
-        .map(
-          (e) => `${e.server.id} (${e.family === "ipv4" ? "IPv4" : "IPv6"})`,
-        );
+        .map((e) => `${e.server.id} ${e.family === "ipv4" ? "v4" : "v6"}`);
 
-      const parts: string[] = [];
+      const chips: HTMLElement[] = [];
       if (using.length > 0) {
-        parts.push(`Your lookups are reaching ${using.join(", ")}.`);
-      } else if (done.length === endpoints.length) {
-        parts.push(
-          `None of your lookups reached Bancuh DNS in the last ${Math.round(windowMs / 60_000)} minutes.`,
+        chips.push(chip("Using", "ll-chip-label"));
+        for (const u of using) chips.push(chip(u, "ll-chip-on"));
+      } else if (endpoints.every((e) => e.state === "error")) {
+        chips.push(
+          chip(
+            "Couldn't reach any server. Check your connection or ad blocker.",
+            "ll-chip-warn",
+          ),
         );
+      } else if (pending) {
+        chips.push(chip("Checking every server…", "ll-muted"));
       } else {
-        parts.push("Checking every server…");
+        chips.push(
+          chip(
+            `No lookups from you in the last ${Math.round(windowMs / 60_000)} minutes`,
+            "ll-chip-warn",
+          ),
+        );
       }
-
-      const addrs: string[] = [];
-      if (ip4) addrs.push(`IPv4 ${ip4}`);
-      if (ip6) addrs.push(`IPv6 ${ip6}`);
-      if (addrs.length) parts.push(`Your address: ${addrs.join(", ")}.`);
-      if (noV6 && v6.length > 0)
-        parts.push("Your network has no IPv6, so only IPv4 lookups can show.");
-
-      summary.textContent = parts.join(" ");
+      if (ip4) chips.push(chip(`IPv4 ${ip4}`));
+      if (ip6) chips.push(chip(`IPv6 ${ip6}`));
+      if (
+        !pending &&
+        v6.every((e) => e.state === "error") &&
+        endpoints.some((e) => e.family === "ipv4" && e.state === "ok")
+      ) {
+        chips.push(chip("No IPv6 on this network", "ll-muted"));
+      }
+      summary.replaceChildren(...chips);
     }
 
     function answerText(row: Row): string {
@@ -291,34 +310,37 @@ const servers = (await getServers()).map((s) => ({
         const tr = document.createElement("tr");
 
         const time = document.createElement("td");
-        time.className = "ll-nowrap";
+        time.className = "ll-nowrap ll-muted";
         time.textContent = new Date(row.at).toLocaleTimeString();
 
         const name = document.createElement("td");
         name.className = "ll-name";
         const code = document.createElement("code");
         code.textContent = row.name;
-        name.append(code);
-
-        const type = document.createElement("td");
+        const type = document.createElement("span");
+        type.className = "ll-type";
         type.textContent = row.type;
+        name.append(code, " ", type);
 
         const result = document.createElement("td");
+        result.className = "ll-result";
         if (row.blocked) {
           const badge = document.createElement("span");
           badge.className = "ll-badge";
           badge.textContent = "Blocked";
           result.append(badge);
         } else {
-          result.className = "ll-answer";
-          result.textContent = answerText(row);
+          const answer = document.createElement("div");
+          answer.className = "ll-answer";
+          answer.textContent = answerText(row);
+          result.append(answer);
         }
+        const via = document.createElement("div");
+        via.className = "ll-via ll-muted";
+        via.textContent = `${row.server} · ${row.family === "ipv4" ? "IPv4" : "IPv6"}`;
+        result.append(via);
 
-        const server = document.createElement("td");
-        server.className = "ll-nowrap ll-muted";
-        server.textContent = `${row.server} · ${row.family === "ipv4" ? "v4" : "v6"}`;
-
-        tr.append(time, name, type, result, server);
+        tr.append(time, name, result);
         fragment.append(tr);
       }
       tableBody.replaceChildren(fragment);
@@ -367,36 +389,73 @@ const servers = (await getServers()).map((s) => ({
   }
 
   .live-logs .ll-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .live-logs .ll-chip {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid var(--sl-color-hairline-light);
+    font-size: var(--sl-text-sm);
+    white-space: nowrap;
+  }
+
+  .live-logs .ll-chip-label {
+    border-color: transparent;
+    padding-left: 0;
     font-weight: 600;
-    margin-bottom: 0.75rem;
   }
 
-  .live-logs .ll-status-wrap,
-  .live-logs .ll-table-wrap {
-    overflow-x: auto;
+  .live-logs .ll-chip-on {
+    background: var(--sl-color-accent-low);
+    border-color: var(--sl-color-accent);
+    color: var(--sl-color-accent-high);
+    font-weight: 600;
   }
 
-  .live-logs table {
-    border-collapse: collapse;
-    width: 100%;
+  .live-logs .ll-chip-warn {
+    white-space: normal;
+    border-radius: 0.75rem;
+    background: var(--sl-color-orange-low);
+    border-color: var(--sl-color-orange);
+    color: var(--sl-color-orange-high);
+  }
+
+  .live-logs .ll-servers {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(8.25rem, 1fr));
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .live-logs .ll-card {
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
     font-size: var(--sl-text-sm);
   }
 
-  .live-logs th,
-  .live-logs td {
-    text-align: left;
-    vertical-align: top;
-    padding: 0.35rem 0.75rem 0.35rem 0;
-    border-bottom: 1px solid var(--sl-color-hairline);
+  .live-logs .ll-card.ll-in-use {
+    border-color: var(--sl-color-accent);
   }
 
-  .live-logs th {
-    color: var(--sl-color-gray-3);
-    font-weight: 600;
+  .live-logs .ll-card-title {
+    margin-bottom: 0.25rem;
   }
 
-  .live-logs .ll-status {
-    margin-bottom: 1rem;
+  .live-logs .ll-card-title span {
+    display: block;
+    font-size: var(--sl-text-xs);
+  }
+
+  .live-logs .ll-card-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
   }
 
   .live-logs .ll-controls {
@@ -425,6 +484,29 @@ const servers = (await getServers()).map((s) => ({
     cursor: pointer;
   }
 
+  .live-logs .ll-table-wrap {
+    overflow-x: auto;
+  }
+
+  .live-logs table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: var(--sl-text-sm);
+  }
+
+  .live-logs th,
+  .live-logs td {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.45rem 1rem 0.45rem 0;
+    border-bottom: 1px solid var(--sl-color-hairline);
+  }
+
+  .live-logs th {
+    color: var(--sl-color-gray-3);
+    font-weight: 600;
+  }
+
   .live-logs .ll-muted {
     color: var(--sl-color-gray-3);
   }
@@ -438,9 +520,31 @@ const servers = (await getServers()).map((s) => ({
     white-space: nowrap;
   }
 
-  .live-logs .ll-name,
+  .live-logs .ll-name {
+    word-break: break-all;
+  }
+
+  .live-logs .ll-type {
+    display: inline-block;
+    margin-left: 0.25rem;
+    padding: 0 0.35rem;
+    border-radius: 0.25rem;
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-gray-2);
+    font-size: var(--sl-text-xs);
+    word-break: normal;
+  }
+
+  .live-logs .ll-result {
+    min-width: 12rem;
+  }
+
   .live-logs .ll-answer {
     word-break: break-all;
+  }
+
+  .live-logs .ll-via {
+    font-size: var(--sl-text-xs);
   }
 
   .live-logs .ll-badge {
