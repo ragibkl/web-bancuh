@@ -259,7 +259,13 @@ const servers = (await getServers()).map((s) => ({
       const chips: HTMLElement[] = [];
       if (using.length > 0) {
         chips.push(chip("Using", "ll-chip-label"));
-        for (const u of using) chips.push(chip(u, "ll-chip-on"));
+        // Past a few, the server list below says which; a row of tags here
+        // would only push the lookups further down on a phone.
+        if (using.length > 3) {
+          chips.push(chip(`${using.length} servers`, "ll-chip-on"));
+        } else {
+          for (const u of using) chips.push(chip(u, "ll-chip-on"));
+        }
       } else if (endpoints.every((e) => e.state === "error")) {
         chips.push(
           chip(
@@ -310,13 +316,18 @@ const servers = (await getServers()).map((s) => ({
         const tr = document.createElement("tr");
 
         const time = document.createElement("td");
-        time.className = "ll-nowrap ll-muted";
+        time.className = "ll-time ll-nowrap ll-muted";
         time.textContent = new Date(row.at).toLocaleTimeString();
 
         const name = document.createElement("td");
         name.className = "ll-name";
         const code = document.createElement("code");
-        code.textContent = row.name;
+        // A line break opportunity after each dot, so a long name wraps
+        // between labels instead of mid-word on a narrow screen.
+        row.name.split(".").forEach((label, i, labels) => {
+          code.append(i < labels.length - 1 ? `${label}.` : label);
+          if (i < labels.length - 1) code.append(document.createElement("wbr"));
+        });
         const type = document.createElement("span");
         type.className = "ll-type";
         type.textContent = row.type;
@@ -521,7 +532,7 @@ const servers = (await getServers()).map((s) => ({
   }
 
   .live-logs .ll-name {
-    word-break: break-all;
+    overflow-wrap: anywhere;
   }
 
   .live-logs .ll-type {
@@ -540,7 +551,7 @@ const servers = (await getServers()).map((s) => ({
   }
 
   .live-logs .ll-answer {
-    word-break: break-all;
+    overflow-wrap: anywhere;
   }
 
   .live-logs .ll-via {
@@ -560,5 +571,91 @@ const servers = (await getServers()).map((s) => ({
   .live-logs .ll-note {
     color: var(--sl-color-gray-3);
     font-size: var(--sl-text-sm);
+  }
+
+  /* Phones: one compact line per server, and each lookup as a two-line row
+     with the name across the full width, instead of three narrow columns. */
+  @media (max-width: 40rem) {
+    .live-logs .ll-servers {
+      grid-template-columns: 1fr;
+      gap: 0;
+      border: 1px solid var(--sl-color-hairline-light);
+      border-radius: 0.5rem;
+      padding: 0.25rem 0.75rem;
+    }
+
+    .live-logs .ll-card,
+    .live-logs .ll-card.ll-in-use {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      border: none;
+      border-bottom: 1px solid var(--sl-color-hairline);
+      border-radius: 0;
+      padding: 0.3rem 0;
+    }
+
+    .live-logs .ll-card:last-child {
+      border-bottom: none;
+    }
+
+    .live-logs .ll-card-title {
+      flex: 1;
+      margin: 0;
+    }
+
+    .live-logs .ll-card-title span {
+      display: inline;
+      margin-left: 0.35rem;
+    }
+
+    .live-logs .ll-card-line {
+      gap: 0.35rem;
+      min-width: 4.5rem;
+      justify-content: flex-start;
+    }
+
+    .live-logs .ll-card.ll-in-use .ll-card-title strong {
+      color: var(--sl-color-accent-high);
+    }
+
+    .live-logs .ll-table thead {
+      display: none;
+    }
+
+    .live-logs .ll-table,
+    .live-logs .ll-table tbody {
+      display: block;
+    }
+
+    .live-logs .ll-table tr {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-areas:
+        "name name"
+        "time result";
+      column-gap: 0.75rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--sl-color-hairline);
+    }
+
+    .live-logs .ll-table td {
+      border: none;
+      padding: 0;
+    }
+
+    .live-logs .ll-table .ll-name {
+      grid-area: name;
+      margin-bottom: 0.15rem;
+    }
+
+    .live-logs .ll-table .ll-time {
+      grid-area: time;
+    }
+
+    .live-logs .ll-table .ll-result {
+      grid-area: result;
+      min-width: 0;
+    }
   }
 </style>
