@@ -1,4 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>ragibkl/renovate-config"]
+  "extends": ["github>ragibkl/renovate-config"],
+  "packageRules": [
+    {
+      "description": "Hold TypeScript at 6: `astro check` (run by `npm run build`) refuses TypeScript 7 ('astro check does not currently support TypeScript 7.0'), and @astrojs/check 0.9.12 declares typescript ^5 || ^6. Lift once @astrojs/check supports 7.",
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<7"
+    }
+  ]
 }
